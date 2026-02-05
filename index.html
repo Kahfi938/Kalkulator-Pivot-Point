@@ -3,188 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Pivot Point - PT RFB CIPUTRA SURABAYA</title>
+    <title>Pivot Point Pro Calculator - PT RFB CIPUTRA SURABAYA</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
         }
         
         body {
-            background-color: #f5f5f5;
-            color: #333;
+            background: linear-gradient(135deg, #0c1a2d 0%, #152642 100%);
+            color: #e0e0e0;
             line-height: 1.6;
             padding: 20px;
-            max-width: 1200px;
+            min-height: 100vh;
+            max-width: 1400px;
             margin: 0 auto;
         }
         
         .container {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            background: rgba(18, 30, 52, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             padding: 30px;
             margin-bottom: 30px;
+            border: 1px solid rgba(64, 128, 255, 0.1);
+            backdrop-filter: blur(10px);
         }
         
         header {
             text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba(64, 128, 255, 0.2);
+            position: relative;
+        }
+        
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b00, #ffd166, #06d6a0);
+            border-radius: 3px;
         }
         
         h1 {
-            color: #d4af37;
+            color: #fff;
             margin-bottom: 10px;
-            font-size: 2.2rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, #ff6b00, #ffd166, #06d6a0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
         
         .subtitle {
-            color: #666;
+            color: #8a9bb8;
             font-size: 1.1rem;
+            font-weight: 300;
+            letter-spacing: 0.5px;
         }
         
         .company-name {
-            color: #b8860b;
-            font-weight: bold;
-            margin-top: 5px;
+            color: #06d6a0;
+            font-weight: 600;
+            margin-top: 8px;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
         }
         
         .content {
             display: flex;
             flex-wrap: wrap;
-            gap: 30px;
+            gap: 40px;
         }
         
         .input-section {
             flex: 1;
-            min-width: 300px;
+            min-width: 350px;
+            background: rgba(13, 22, 40, 0.7);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid rgba(64, 128, 255, 0.15);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         
         .result-section {
             flex: 1;
-            min-width: 300px;
+            min-width: 350px;
         }
         
         .section-title {
-            color: #d4af37;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #f0e6d2;
+            color: #ffd166;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 209, 102, 0.3);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
         
         .section-title i {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
+            color: #ff6b00;
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
         
         label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #555;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #a6b3cc;
+            font-size: 0.95rem;
+            letter-spacing: 0.3px;
         }
         
         input, select, textarea {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
+            padding: 14px 16px;
+            background: rgba(10, 18, 33, 0.8);
+            border: 1px solid rgba(64, 128, 255, 0.3);
             border-radius: 8px;
             font-size: 1rem;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
+            color: #e0e0e0;
+            font-weight: 400;
         }
         
         textarea {
             resize: vertical;
-            min-height: 60px;
+            min-height: 80px;
+            font-family: 'Inter', sans-serif;
         }
         
         input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: #d4af37;
-            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+            border-color: #ff6b00;
+            box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.2);
+            background: rgba(10, 18, 33, 0.9);
         }
         
         .market-type {
             display: flex;
             gap: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
         .market-option {
             flex: 1;
             text-align: center;
-            padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
+            padding: 18px 10px;
+            border: 2px solid rgba(64, 128, 255, 0.2);
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s;
+            background: rgba(10, 18, 33, 0.5);
         }
         
         .market-option:hover {
-            border-color: #d4af37;
-            background-color: #fffdf5;
+            border-color: #ff6b00;
+            background: rgba(255, 107, 0, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 107, 0, 0.2);
         }
         
         .market-option.active {
-            border-color: #d4af37;
-            background-color: #fff8e1;
+            border-color: #ff6b00;
+            background: rgba(255, 107, 0, 0.15);
+            box-shadow: 0 5px 15px rgba(255, 107, 0, 0.25);
         }
         
         .period-type {
             display: flex;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
         .period-option {
             flex: 1;
             text-align: center;
-            padding: 12px;
-            border: 2px solid #ddd;
+            padding: 14px 8px;
+            border: 2px solid rgba(64, 128, 255, 0.2);
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
             font-weight: 600;
+            background: rgba(10, 18, 33, 0.5);
+            color: #8a9bb8;
+            font-size: 0.95rem;
         }
         
         .period-option:hover {
-            border-color: #2c5e2e;
-            background-color: #f0f9f0;
+            border-color: #06d6a0;
+            background: rgba(6, 214, 160, 0.1);
+            color: #06d6a0;
+            transform: translateY(-2px);
         }
         
         .period-option.active {
-            border-color: #2c5e2e;
-            background-color: #e8f5e9;
-            color: #2c5e2e;
+            border-color: #06d6a0;
+            background: rgba(6, 214, 160, 0.2);
+            color: #06d6a0;
+            box-shadow: 0 5px 15px rgba(6, 214, 160, 0.2);
         }
         
         .market-icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
+            font-size: 2.2rem;
+            margin-bottom: 12px;
         }
         
         .gold-option .market-icon {
-            color: #d4af37;
+            color: #ffd166;
+            text-shadow: 0 0 10px rgba(255, 209, 102, 0.3);
         }
         
         .hangseng-option .market-icon {
-            color: #2c5e2e;
+            color: #06d6a0;
+            text-shadow: 0 0 10px rgba(6, 214, 160, 0.3);
         }
         
         .date-range {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             align-items: center;
         }
         
@@ -193,30 +247,31 @@
         }
         
         .period-inputs {
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 4px solid #2c5e2e;
+            background: rgba(6, 214, 160, 0.05);
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-left: 4px solid #06d6a0;
+            border: 1px solid rgba(6, 214, 160, 0.2);
         }
         
         .period-info {
-            font-size: 0.9rem;
-            color: #666;
-            margin-top: 5px;
+            font-size: 0.85rem;
+            color: #8a9bb8;
+            margin-top: 8px;
             font-style: italic;
         }
         
         .buttons {
             display: flex;
             gap: 15px;
-            margin-top: 30px;
+            margin-top: 35px;
         }
         
         button {
-            padding: 14px 24px;
+            padding: 16px 24px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
@@ -224,46 +279,67 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
             flex: 1;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
         
         .calculate-btn {
-            background-color: #d4af37;
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8e42 100%);
             color: white;
+            box-shadow: 0 5px 15px rgba(255, 107, 0, 0.3);
         }
         
         .calculate-btn:hover {
-            background-color: #b8962a;
-            transform: translateY(-2px);
+            background: linear-gradient(135deg, #e85c00 0%, #ff7a2e 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 107, 0, 0.4);
         }
         
         .download-btn {
-            background-color: #2c5e2e;
+            background: linear-gradient(135deg, #06d6a0 0%, #0ce6b2 100%);
             color: white;
+            box-shadow: 0 5px 15px rgba(6, 214, 160, 0.3);
         }
         
         .download-btn:hover {
-            background-color: #234a24;
-            transform: translateY(-2px);
+            background: linear-gradient(135deg, #05c191 0%, #0bd4a7 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(6, 214, 160, 0.4);
         }
         
         .reset-btn {
-            background-color: #f0e6d2;
-            color: #333;
+            background: rgba(64, 128, 255, 0.1);
+            color: #a6b3cc;
+            border: 1px solid rgba(64, 128, 255, 0.3);
         }
         
         .reset-btn:hover {
-            background-color: #e0d6c2;
-            transform: translateY(-2px);
+            background: rgba(64, 128, 255, 0.2);
+            transform: translateY(-3px);
+            border-color: rgba(64, 128, 255, 0.5);
         }
         
         .result-box {
-            background-color: #f9f5eb;
-            border-radius: 10px;
-            padding: 25px;
-            border-left: 5px solid #d4af37;
-            margin-bottom: 25px;
+            background: linear-gradient(135deg, rgba(13, 22, 40, 0.9) 0%, rgba(18, 30, 52, 0.9) 100%);
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(64, 128, 255, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .result-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b00, #ffd166, #06d6a0);
         }
         
         .market-data {
@@ -273,148 +349,236 @@
         .data-row {
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px dashed #e0d6c2;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(64, 128, 255, 0.1);
+            transition: background 0.2s;
+        }
+        
+        .data-row:hover {
+            background: rgba(64, 128, 255, 0.05);
+            border-radius: 6px;
+            padding-left: 10px;
+            padding-right: 10px;
         }
         
         .data-label {
-            font-weight: 600;
-            color: #555;
-        }
-        
-        .data-value {
-            font-weight: 700;
-            color: #333;
-        }
-        
-        .range-highlight {
-            color: #d4af37;
-            font-weight: bold;
-        }
-        
-        .profit-info {
-            background-color: #e8f5e9;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
+            font-weight: 500;
+            color: #a6b3cc;
             font-size: 0.95rem;
         }
         
+        .data-value {
+            font-weight: 600;
+            color: #fff;
+            font-size: 1.05rem;
+        }
+        
+        .range-highlight {
+            color: #ffd166;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(255, 209, 102, 0.3);
+        }
+        
+        .profit-info {
+            background: rgba(6, 214, 160, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border: 1px solid rgba(6, 214, 160, 0.2);
+        }
+        
         .profit-details {
-            margin-top: 10px;
+            margin-top: 15px;
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
         }
         
         .profit-item {
-            background-color: white;
-            padding: 10px 15px;
-            border-radius: 6px;
+            background: rgba(10, 18, 33, 0.8);
+            padding: 15px;
+            border-radius: 8px;
             flex: 1;
             min-width: 200px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid rgba(6, 214, 160, 0.3);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
         }
         
         .profit-label {
-            font-weight: bold;
-            color: #2c5e2e;
-            margin-bottom: 5px;
+            font-weight: 600;
+            color: #06d6a0;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
         }
         
         .analysis-section {
-            margin-top: 30px;
+            margin-top: 35px;
         }
         
         .resistance, .support {
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
         
         .level {
             display: flex;
             justify-content: space-between;
-            padding: 10px 15px;
-            margin-bottom: 8px;
-            border-radius: 6px;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            border-radius: 8px;
             font-weight: 600;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+        
+        .level:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         
         .resistance .level {
-            background-color: #ffebee;
-            color: #c62828;
+            background: linear-gradient(90deg, rgba(198, 40, 40, 0.1) 0%, rgba(198, 40, 40, 0.05) 100%);
+            color: #ff6b6b;
+            border-left: 4px solid #ff6b6b;
         }
         
         .support .level {
-            background-color: #e8f5e9;
-            color: #2e7d32;
+            background: linear-gradient(90deg, rgba(46, 125, 50, 0.1) 0%, rgba(46, 125, 50, 0.05) 100%);
+            color: #06d6a0;
+            border-left: 4px solid #06d6a0;
         }
         
         .pivot-level {
-            background-color: #fff8e1 !important;
-            color: #ff8f00 !important;
+            background: linear-gradient(90deg, rgba(255, 143, 0, 0.15) 0%, rgba(255, 143, 0, 0.1) 100%) !important;
+            color: #ffd166 !important;
             font-weight: bold;
-            font-size: 1.1rem;
-            margin: 15px 0;
+            font-size: 1.2rem;
+            margin: 20px 0;
+            padding: 18px;
+            border-left: 4px solid #ffd166 !important;
+            text-align: center;
+            letter-spacing: 0.5px;
         }
         
         .signature {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            color: #666;
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(64, 128, 255, 0.2);
+            color: #a6b3cc;
+            position: relative;
+        }
+        
+        .signature::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b00, #ffd166);
+            border-radius: 3px;
         }
         
         .signature-text {
             font-style: italic;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            color: #8a9bb8;
         }
         
         .signature-name {
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+        
+        .news-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(64, 128, 255, 0.2);
+        }
+        
+        .news-title {
+            font-weight: 600;
+            color: #ffd166;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
             font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .news-content {
+            font-style: italic;
+            color: #a6b3cc;
+            line-height: 1.6;
+            background: rgba(10, 18, 33, 0.5);
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid #ffd166;
         }
         
         .period-indicator {
             display: inline-block;
-            padding: 4px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
+            font-size: 0.8rem;
+            font-weight: 600;
             margin-left: 10px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
         
         .daily-indicator {
-            background-color: #e3f2fd;
-            color: #1565c0;
-            border: 1px solid #1565c0;
+            background: linear-gradient(135deg, #1565c0 0%, #1e88e5 100%);
+            color: white;
+            box-shadow: 0 3px 10px rgba(21, 101, 192, 0.3);
         }
         
         .weekly-indicator {
-            background-color: #f3e5f5;
-            color: #7b1fa2;
-            border: 1px solid #7b1fa2;
+            background: linear-gradient(135deg, #7b1fa2 0%, #9c27b0 100%);
+            color: white;
+            box-shadow: 0 3px 10px rgba(123, 31, 162, 0.3);
         }
         
         .monthly-indicator {
-            background-color: #fff3e0;
-            color: #ef6c00;
-            border: 1px solid #ef6c00;
+            background: linear-gradient(135deg, #ef6c00 0%, #ff9800 100%);
+            color: white;
+            box-shadow: 0 3px 10px rgba(239, 108, 0, 0.3);
         }
         
         footer {
             text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            color: #777;
+            margin-top: 50px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(64, 128, 255, 0.2);
+            color: #8a9bb8;
             font-size: 0.9rem;
+            letter-spacing: 0.5px;
         }
         
-        @media (max-width: 768px) {
+        footer::before {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b00, #06d6a0);
+            margin: 0 auto 20px;
+            border-radius: 3px;
+        }
+        
+        @media (max-width: 992px) {
             .content {
                 flex-direction: column;
             }
             
+            .input-section, .result-section {
+                min-width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
             .buttons {
                 flex-direction: column;
             }
@@ -428,170 +592,288 @@
             }
             
             h1 {
-                font-size: 1.8rem;
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 20px;
             }
         }
         
         .notification {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 25px;
             display: none;
+            border-left: 5px solid;
+            font-weight: 500;
+            letter-spacing: 0.3px;
         }
         
         .success {
-            background-color: #d4edda;
-            color: #155724;
-            border-left: 5px solid #28a745;
+            background: rgba(6, 214, 160, 0.1);
+            color: #06d6a0;
+            border-left-color: #06d6a0;
         }
         
         .error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border-left: 5px solid #dc3545;
+            background: rgba(255, 107, 0, 0.1);
+            color: #ff6b6b;
+            border-left-color: #ff6b6b;
         }
         
         .market-indicator {
             display: inline-block;
-            padding: 4px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
+            font-size: 0.8rem;
+            font-weight: 600;
             margin-left: 10px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
         
         .gold-indicator {
-            background-color: #fff8e1;
-            color: #b8860b;
-            border: 1px solid #d4af37;
+            background: linear-gradient(135deg, #ffd166 0%, #ffb347 100%);
+            color: #0c1a2d;
+            box-shadow: 0 3px 10px rgba(255, 209, 102, 0.3);
         }
         
         .hangseng-indicator {
-            background-color: #e8f5e9;
-            color: #2c5e2e;
-            border: 1px solid #2c5e2e;
+            background: linear-gradient(135deg, #06d6a0 0%, #0ce6b2 100%);
+            color: white;
+            box-shadow: 0 3px 10px rgba(6, 214, 160, 0.3);
         }
         
         .result-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
         
         .date-separator {
-            color: #666;
-            font-weight: bold;
+            color: #8a9bb8;
+            font-weight: 600;
+            padding: 0 8px;
+        }
+        
+        .market-option h3 {
+            color: #fff;
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .market-option p {
+            color: #8a9bb8;
+            font-size: 0.85rem;
+            font-weight: 300;
+        }
+        
+        .result-header h3 {
+            color: #fff;
+            font-size: 1.4rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .result-header h3 i {
+            color: #ffd166;
+        }
+        
+        .glow-effect {
+            position: relative;
+        }
+        
+        .glow-effect::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: inherit;
+            box-shadow: 0 0 20px rgba(255, 107, 0, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: -1;
+        }
+        
+        .glow-effect:hover::after {
+            opacity: 1;
+        }
+        
+        /* Trading chart inspired elements */
+        .chart-line {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 100%;
+            opacity: 0.1;
+            pointer-events: none;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 0, 0.2), transparent);
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 50%, 25% 40%, 50% 60%, 75% 30%, 100% 50%, 100% 100%, 0% 100%);
+        }
+        
+        /* Professional trading terminal style */
+        .terminal-style {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .terminal-style::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(90deg, transparent 0%, rgba(64, 128, 255, 0.05) 50%, transparent 100%),
+                radial-gradient(circle at 20% 80%, rgba(255, 107, 0, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(6, 214, 160, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .terminal-style > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Grid pattern for professional look */
+        .grid-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(64, 128, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(64, 128, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
+    <div class="container terminal-style">
+        <div class="grid-bg"></div>
+        <div class="chart-line"></div>
+        
         <header>
-            <h1><i class="fas fa-chart-line"></i> REVIEW MARKET</h1>
-            <p class="subtitle">Kalkulator Pivot Point untuk Analisis Pasar Gold dan Indeks Hang Seng</p>
+            <h1><i class="fas fa-chart-candlestick"></i> PIVOT POINT PRO CALCULATOR</h1>
+            <p class="subtitle">Analisis Teknikal Profesional untuk Trader</p>
             <p class="company-name">PT RFB CIPUTRA SURABAYA</p>
         </header>
         
         <div class="notification" id="notification"></div>
         
         <div class="content">
-            <div class="input-section">
-                <h2 class="section-title"><i class="fas fa-calculator"></i> Input Data Pasar</h2>
+            <div class="input-section glow-effect">
+                <h2 class="section-title"><i class="fas fa-sliders-h"></i> INPUT DATA MARKET</h2>
                 
                 <div class="market-type">
                     <div class="market-option gold-option active" id="goldOption">
                         <div class="market-icon">
-                            <i class="fas fa-coins"></i>
+                            <i class="fas fa-gem"></i>
                         </div>
                         <h3>GOLD</h3>
-                        <p>1 poin = $100 / Rp 1.000.000</p>
+                        <p>1 Point = $100 / Rp 1.000.000</p>
                     </div>
                     <div class="market-option hangseng-option" id="hangsengOption">
                         <div class="market-icon">
-                            <i class="fas fa-chart-bar"></i>
+                            <i class="fas fa-chart-line"></i>
                         </div>
-                        <h3>INDEKS HANG SENG</h3>
-                        <p>1 poin = $5 / Rp 50.000</p>
+                        <h3>HANG SENG INDEX</h3>
+                        <p>1 Point = $5 / Rp 50.000</p>
                     </div>
                 </div>
                 
                 <input type="hidden" id="marketType" value="gold">
                 
                 <div class="period-type">
-                    <div class="period-option active" id="dailyOption">HARIAN</div>
-                    <div class="period-option" id="weeklyOption">MINGGUAN</div>
-                    <div class="period-option" id="monthlyOption">BULANAN</div>
+                    <div class="period-option active" id="dailyOption">DAILY</div>
+                    <div class="period-option" id="weeklyOption">WEEKLY</div>
+                    <div class="period-option" id="monthlyOption">MONTHLY</div>
                 </div>
                 
                 <input type="hidden" id="periodType" value="daily">
                 
                 <div class="period-inputs" id="periodInputs">
-                    <!-- Daily period inputs will be inserted here -->
+                    <!-- Period inputs will be dynamically inserted here -->
                 </div>
                 
                 <div class="form-group">
-                    <label for="open"><i class="fas fa-door-open"></i> Harga Open (Buka)</label>
-                    <input type="number" id="open" step="0.01" placeholder="Masukkan harga buka" value="4674.23">
+                    <label for="open"><i class="fas fa-arrow-up-from-bracket"></i> OPEN PRICE</label>
+                    <input type="number" id="open" step="0.01" placeholder="Enter opening price" value="4674.23">
                 </div>
                 
                 <div class="form-group">
-                    <label for="high"><i class="fas fa-arrow-up"></i> Harga High (Tertinggi)</label>
-                    <input type="number" id="high" step="0.01" placeholder="Masukkan harga tertinggi" value="4993.69">
+                    <label for="high"><i class="fas fa-arrow-trend-up"></i> HIGH PRICE</label>
+                    <input type="number" id="high" step="0.01" placeholder="Enter highest price" value="4993.69">
                 </div>
                 
                 <div class="form-group">
-                    <label for="low"><i class="fas fa-arrow-down"></i> Harga Low (Terendah)</label>
-                    <input type="number" id="low" step="0.01" placeholder="Masukkan harga terendah" value="4666.51">
+                    <label for="low"><i class="fas fa-arrow-trend-down"></i> LOW PRICE</label>
+                    <input type="number" id="low" step="0.01" placeholder="Enter lowest price" value="4666.51">
                 </div>
                 
                 <div class="form-group">
-                    <label for="close"><i class="fas fa-door-closed"></i> Harga Close (Tutup)</label>
-                    <input type="number" id="close" step="0.01" placeholder="Masukkan harga tutup" value="4950.61">
+                    <label for="close"><i class="fas fa-arrow-down-to-bracket"></i> CLOSE PRICE</label>
+                    <input type="number" id="close" step="0.01" placeholder="Enter closing price" value="4950.61">
                 </div>
                 
                 <div class="form-group">
-                    <label for="analysisDateStart"><i class="fas fa-calendar-day"></i> Tanggal Mulai Analisis (Periode Berikutnya)</label>
+                    <label for="analysisDateStart"><i class="fas fa-calendar-alt"></i> ANALYSIS START DATE (Next Period)</label>
                     <input type="date" id="analysisDateStart" value="2026-02-04">
                 </div>
                 
                 <div class="form-group" id="analysisDateEndGroup" style="display: none;">
-                    <label for="analysisDateEnd"><i class="fas fa-calendar-day"></i> Tanggal Akhir Analisis (Periode Berikutnya)</label>
+                    <label for="analysisDateEnd"><i class="fas fa-calendar-alt"></i> ANALYSIS END DATE (Next Period)</label>
                     <input type="date" id="analysisDateEnd" value="2026-02-10">
                 </div>
                 
                 <div class="form-group">
-                    <label for="signature"><i class="fas fa-signature"></i> Tanda Tangan / Nama Analis</label>
-                    <input type="text" id="signature" placeholder="Masukkan nama analis" value="Kahfi">
+                    <label for="signature"><i class="fas fa-signature"></i> ANALYST SIGNATURE</label>
+                    <input type="text" id="signature" placeholder="Enter analyst name" value="Kahfi">
                 </div>
                 
                 <div class="form-group">
-                    <label for="notes"><i class="fas fa-sticky-note"></i> Catatan Tambahan (Opsional)</label>
-                    <textarea id="notes" placeholder="Masukkan catatan tambahan jika ada..."></textarea>
+                    <label for="notes"><i class="fas fa-bullhorn"></i> MARKET NEWS (Optional)</label>
+                    <textarea id="notes" placeholder="Enter relevant market news or insights..."></textarea>
                 </div>
                 
                 <div class="buttons">
                     <button class="calculate-btn" id="calculateBtn">
-                        <i class="fas fa-calculator"></i> Hitung Pivot Point
+                        <i class="fas fa-calculator"></i> CALCULATE PIVOT
                     </button>
                     <button class="reset-btn" id="resetBtn">
-                        <i class="fas fa-redo"></i> Reset
+                        <i class="fas fa-redo"></i> RESET
                     </button>
                 </div>
             </div>
             
             <div class="result-section">
-                <h2 class="section-title"><i class="fas fa-chart-bar"></i> Hasil Analisis Pivot Point</h2>
+                <h2 class="section-title"><i class="fas fa-chart-bar"></i> PIVOT POINT ANALYSIS</h2>
                 
-                <div class="result-box">
+                <div class="result-box glow-effect">
                     <div class="result-header">
-                        <h3 style="color: #d4af37;">
-                            <i class="far fa-calendar-check"></i> 
-                            <span id="result-date">Selasa, 03 Februari 2026</span>
+                        <h3>
+                            <i class="fas fa-calendar-day"></i> 
+                            <span id="result-date">Tuesday, February 03, 2026</span>
                         </h3>
                         <div>
                             <span class="market-indicator gold-indicator" id="marketIndicator">GOLD</span>
-                            <span class="period-indicator daily-indicator" id="periodIndicator">HARIAN</span>
+                            <span class="period-indicator daily-indicator" id="periodIndicator">DAILY</span>
                         </div>
                     </div>
                     
@@ -617,38 +899,34 @@
                         </div>
                         
                         <div class="data-row">
-                            <span class="data-label">Range Pergerakan Harga</span>
-                            <span class="data-value range-highlight" id="result-range">327.18 poin</span>
+                            <span class="data-label">Price Movement Range</span>
+                            <span class="data-value range-highlight" id="result-range">327.18 points</span>
                         </div>
                     </div>
                     
                     <div class="profit-info">
-                        <p><strong id="point-value-text">Nilai 1 poin setara dengan $100 / Rp 1.000.000</strong></p>
-                        <p><strong>Probabilitas taking profit</strong> berdasarkan range pergerakan <span id="result-range-value">327.18</span> poin:</p>
+                        <p><strong id="point-value-text">1 point value = $100 / Rp 1.000.000</strong></p>
+                        <p><strong>Taking Profit Probability</strong> based on movement range of <span id="result-range-value">327.18</span> points:</p>
                         
                         <div class="profit-details">
                             <div class="profit-item">
-                                <div class="profit-label">Dalam USD:</div>
+                                <div class="profit-label">IN USD:</div>
                                 <div id="profit-usd">$32,718.00</div>
                             </div>
                             <div class="profit-item">
-                                <div class="profit-label">Dalam IDR:</div>
+                                <div class="profit-label">IN IDR:</div>
                                 <div id="profit-idr">Rp 327.180.000</div>
                             </div>
                         </div>
                     </div>
-                    
-                    <div id="notes-display" style="margin-top: 15px; font-style: italic; color: #666; display: none;">
-                        <strong>Catatan:</strong> <span id="notes-text"></span>
-                    </div>
                 </div>
                 
                 <div class="analysis-section">
-                    <h3 class="section-title"><i class="fas fa-chart-line"></i> ANALISA <span id="analysis-period-text">HARI INI</span></h3>
-                    <p style="margin-bottom: 20px; font-style: italic;" id="analysis-date-result">Kamis, 04 Februari 2026</p>
+                    <h3 class="section-title"><i class="fas fa-chart-line"></i> TODAY'S ANALYSIS</h3>
+                    <p style="margin-bottom: 25px; font-style: italic; color: #8a9bb8;" id="analysis-date-result">Thursday, February 04, 2026</p>
                     
                     <div class="resistance">
-                        <h4><i class="fas fa-arrow-up" style="color: #c62828;"></i> RESISTANCE (Batas kenaikan harga)</h4>
+                        <h4 style="color: #ff6b6b; margin-bottom: 15px;"><i class="fas fa-arrow-up"></i> RESISTANCE LEVELS</h4>
                         <div class="level" id="r1">R1: <span>5074.03</span></div>
                         <div class="level" id="r2">R2: <span>5197.45</span></div>
                         <div class="level" id="r3">R3: <span>5524.63</span></div>
@@ -656,11 +934,11 @@
                     </div>
                     
                     <div class="pivot-level level" id="pivot">
-                        📌 HARGA PIVOT / Harga tengah = <span>4870.27</span>
+                        <i class="fas fa-bullseye"></i> PIVOT POINT = <span>4870.27</span>
                     </div>
                     
                     <div class="support">
-                        <h4><i class="fas fa-arrow-down" style="color: #2e7d32;"></i> SUPPORT (Batas penurunan harga)</h4>
+                        <h4 style="color: #06d6a0; margin-bottom: 15px;"><i class="fas fa-arrow-down"></i> SUPPORT LEVELS</h4>
                         <div class="level" id="s1">S1: <span>4746.85</span></div>
                         <div class="level" id="s2">S2: <span>4543.09</span></div>
                         <div class="level" id="s3">S3: <span>4215.91</span></div>
@@ -669,21 +947,29 @@
                 </div>
                 
                 <div class="signature">
-                    <p class="signature-text">Terima kasih,</p>
+                    <p class="signature-text">Best regards,</p>
                     <p class="signature-name" id="signature-result">Kahfi</p>
-                    <p>PT RFB CIPUTRA SURABAYA</p>
+                    <p style="color: #06d6a0; font-weight: 500;">PT RFB CIPUTRA SURABAYA</p>
+                </div>
+                
+                <div class="news-section" id="news-display" style="display: none;">
+                    <div class="news-title">
+                        <i class="fas fa-newspaper"></i> MARKET NEWS
+                    </div>
+                    <div class="news-content" id="news-text"></div>
                 </div>
                 
                 <div class="buttons">
                     <button class="download-btn" id="downloadBtn">
-                        <i class="fas fa-download"></i> Unduh Hasil Analisis
+                        <i class="fas fa-file-export"></i> EXPORT ANALYSIS
                     </button>
                 </div>
             </div>
         </div>
         
         <footer>
-            <p>© 2026 Kalkulator Pivot Point - PT RFB CIPUTRA SURABAYA. Untuk keperluan analisis pasar.</p>
+            <p>© 2026 Pivot Point Pro Calculator - Professional Trading Tool</p>
+            <p style="margin-top: 10px; font-size: 0.8rem; color: #6b7b9c;">For professional market analysis and trading decisions</p>
         </footer>
     </div>
 
@@ -697,48 +983,48 @@
                 name: "GOLD",
                 pointValueUSD: 100,
                 pointValueIDR: 1000000,
-                color: "#d4af37",
+                color: "#ffd166",
                 indicatorClass: "gold-indicator",
-                icon: "fas fa-coins"
+                icon: "fas fa-gem"
             },
             hangseng: {
-                name: "INDEKS HANG SENG",
+                name: "HANG SENG INDEX",
                 pointValueUSD: 5,
                 pointValueIDR: 50000,
-                color: "#2c5e2e",
+                color: "#06d6a0",
                 indicatorClass: "hangseng-indicator",
-                icon: "fas fa-chart-bar"
+                icon: "fas fa-chart-line"
             }
         };
         
         // Konfigurasi untuk setiap periode
         const periodConfig = {
             daily: {
-                name: "HARIAN",
-                label: "Tanggal Analisis",
-                info: "Analisis berdasarkan data harian",
-                analysisText: "HARI INI",
+                name: "DAILY",
+                label: "Analysis Date",
+                info: "Daily market analysis",
+                analysisText: "TODAY'S ANALYSIS",
                 indicatorClass: "daily-indicator",
                 dateFormat: { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' },
-                nextPeriodLabel: "Tanggal Analisis (Besok)"
+                nextPeriodLabel: "Analysis Date (Tomorrow)"
             },
             weekly: {
-                name: "MINGGUAN",
-                label: "Rentang Tanggal Analisis (Mingguan)",
-                info: "Analisis berdasarkan data mingguan (dapat disetel dari tanggal tertentu sampai tanggal tertentu)",
-                analysisText: "MINGGU INI",
+                name: "WEEKLY",
+                label: "Date Range (Weekly)",
+                info: "Weekly market analysis (custom date range)",
+                analysisText: "WEEKLY ANALYSIS",
                 indicatorClass: "weekly-indicator",
                 dateFormat: { year: 'numeric', month: 'long', day: 'numeric' },
-                nextPeriodLabel: "Rentang Tanggal Analisis (Minggu Depan)"
+                nextPeriodLabel: "Date Range (Next Week)"
             },
             monthly: {
-                name: "BULANAN",
-                label: "Rentang Tanggal Analisis (Bulanan)",
-                info: "Analisis berdasarkan data bulanan (dapat disetel dari tanggal tertentu sampai tanggal tertentu)",
-                analysisText: "BULAN INI",
+                name: "MONTHLY",
+                label: "Date Range (Monthly)",
+                info: "Monthly market analysis (custom date range)",
+                analysisText: "MONTHLY ANALYSIS",
                 indicatorClass: "monthly-indicator",
                 dateFormat: { year: 'numeric', month: 'long' },
-                nextPeriodLabel: "Rentang Tanggal Analisis (Bulan Depan)"
+                nextPeriodLabel: "Date Range (Next Month)"
             }
         };
         
@@ -789,7 +1075,7 @@
             return {
                 usd: `$${parseFloat(profitUSD).toLocaleString('en-US', {minimumFractionDigits: 2})}`,
                 idr: `Rp ${profitIDR}`,
-                pointText: `Nilai 1 poin setara dengan $${config.pointValueUSD} / Rp ${config.pointValueIDR.toLocaleString('id-ID')}`
+                pointText: `1 point value = $${config.pointValueUSD} / Rp ${config.pointValueIDR.toLocaleString('id-ID')}`
             };
         }
         
@@ -814,7 +1100,7 @@
             if (currentPeriod === 'daily') {
                 periodInputs.innerHTML = `
                     <div class="form-group">
-                        <label for="date"><i class="far fa-calendar-alt"></i> ${periodConfigCurrent.label}</label>
+                        <label for="date"><i class="far fa-calendar"></i> ${periodConfigCurrent.label}</label>
                         <div class="date-range">
                             <input type="date" id="date" value="2026-02-03">
                         </div>
@@ -824,7 +1110,7 @@
                 
                 // Update label untuk analisis date
                 document.querySelector('label[for="analysisDateStart"]').innerHTML = 
-                    `<i class="fas fa-calendar-day"></i> ${periodConfigCurrent.nextPeriodLabel}`;
+                    `<i class="fas fa-calendar-alt"></i> ${periodConfigCurrent.nextPeriodLabel}`;
                     
                 // Sembunyikan input tanggal akhir untuk harian
                 analysisDateEndGroup.style.display = 'none';
@@ -832,10 +1118,10 @@
             } else if (currentPeriod === 'weekly' || currentPeriod === 'monthly') {
                 periodInputs.innerHTML = `
                     <div class="form-group">
-                        <label for="dateStart"><i class="far fa-calendar-alt"></i> ${periodConfigCurrent.label}</label>
+                        <label for="dateStart"><i class="far fa-calendar"></i> ${periodConfigCurrent.label}</label>
                         <div class="date-range">
                             <input type="date" id="dateStart" value="2026-02-03">
-                            <span class="date-separator">s/d</span>
+                            <span class="date-separator">to</span>
                             <input type="date" id="dateEnd" value="${currentPeriod === 'weekly' ? '2026-02-09' : '2026-02-28'}">
                         </div>
                         <div class="period-info" id="periodInfo">${periodConfigCurrent.info}</div>
@@ -844,14 +1130,14 @@
                 
                 // Update label untuk analisis date
                 document.querySelector('label[for="analysisDateStart"]').innerHTML = 
-                    `<i class="fas fa-calendar-day"></i> ${periodConfigCurrent.nextPeriodLabel}`;
+                    `<i class="fas fa-calendar-alt"></i> ${periodConfigCurrent.nextPeriodLabel}`;
                     
                 // Tampilkan input tanggal akhir untuk mingguan/bulanan
                 analysisDateEndGroup.style.display = 'block';
                 
                 // Update label untuk tanggal akhir analisis
                 document.querySelector('label[for="analysisDateEnd"]').innerHTML = 
-                    `<i class="fas fa-calendar-day"></i> ${currentPeriod === 'weekly' ? 'Tanggal Akhir Analisis (Minggu Depan)' : 'Tanggal Akhir Analisis (Bulan Depan)'}`;
+                    `<i class="fas fa-calendar-alt"></i> ${currentPeriod === 'weekly' ? 'Analysis End Date (Next Week)' : 'Analysis End Date (Next Month)'}`;
             }
         }
         
@@ -879,17 +1165,17 @@
             
             // Validasi input
             if (isNaN(open) || isNaN(high) || isNaN(low) || isNaN(close)) {
-                showNotification("Harap masukkan semua nilai harga dengan benar.", "error");
+                showNotification("Please enter all price values correctly.", "error");
                 return;
             }
             
             if (high < low) {
-                showNotification("Harga tinggi (High) harus lebih besar dari harga rendah (Low).", "error");
+                showNotification("High price must be greater than Low price.", "error");
                 return;
             }
             
             if (open < 0 || high < 0 || low < 0 || close < 0) {
-                showNotification("Harga tidak boleh bernilai negatif.", "error");
+                showNotification("Price values cannot be negative.", "error");
                 return;
             }
             
@@ -899,7 +1185,7 @@
                 const endDate = new Date(dateEndInput);
                 
                 if (endDate < startDate) {
-                    showNotification("Tanggal akhir tidak boleh lebih awal dari tanggal awal.", "error");
+                    showNotification("End date cannot be earlier than start date.", "error");
                     return;
                 }
                 
@@ -908,7 +1194,7 @@
                 const analysisEndDate = new Date(analysisDateEndInput);
                 
                 if (analysisEndDate < analysisStartDate) {
-                    showNotification("Tanggal akhir analisis tidak boleh lebih awal dari tanggal mulai analisis.", "error");
+                    showNotification("Analysis end date cannot be earlier than analysis start date.", "error");
                     return;
                 }
             }
@@ -925,8 +1211,8 @@
                 const dateObj = new Date(dateStartInput);
                 const analysisDateObj = new Date(analysisDateStartInput);
                 
-                formattedDate = dateObj.toLocaleDateString('id-ID', periodConfigCurrent.dateFormat);
-                formattedAnalysisDate = analysisDateObj.toLocaleDateString('id-ID', periodConfigCurrent.dateFormat);
+                formattedDate = dateObj.toLocaleDateString('en-US', periodConfigCurrent.dateFormat);
+                formattedAnalysisDate = analysisDateObj.toLocaleDateString('en-US', periodConfigCurrent.dateFormat);
             } else {
                 const startDateObj = new Date(dateStartInput);
                 const endDateObj = new Date(dateEndInput);
@@ -935,11 +1221,11 @@
                 
                 // Format rentang tanggal
                 if (currentPeriod === 'weekly') {
-                    formattedDate = `${startDateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long' })} - ${endDateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}`;
-                    formattedAnalysisDate = `${analysisStartDateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long' })} - ${analysisEndDateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}`;
+                    formattedDate = `${startDateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })} - ${endDateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
+                    formattedAnalysisDate = `${analysisStartDateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })} - ${analysisEndDateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
                 } else {
-                    formattedDate = `${startDateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long' })} - ${endDateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}`;
-                    formattedAnalysisDate = `${analysisStartDateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long' })} - ${analysisEndDateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}`;
+                    formattedDate = `${startDateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })} - ${endDateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
+                    formattedAnalysisDate = `${analysisStartDateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })} - ${analysisEndDateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
                 }
             }
             
@@ -952,7 +1238,7 @@
             document.getElementById('result-high').textContent = high.toFixed(2);
             document.getElementById('result-low').textContent = low.toFixed(2);
             document.getElementById('result-close').textContent = close.toFixed(2);
-            document.getElementById('result-range').textContent = `${results.range} poin`;
+            document.getElementById('result-range').textContent = `${results.range} points`;
             document.getElementById('result-range-value').textContent = results.range;
             
             // Update profit info
@@ -967,7 +1253,7 @@
             document.getElementById('analysis-period-text').textContent = periodConfigCurrent.analysisText;
             
             // Update pivot points
-            document.getElementById('pivot').innerHTML = `📌 HARGA PIVOT / Harga tengah = <span>${results.pivot}</span>`;
+            document.getElementById('pivot').innerHTML = `<i class="fas fa-bullseye"></i> PIVOT POINT = <span>${results.pivot}</span>`;
             document.getElementById('r1').innerHTML = `R1: <span>${results.r1}</span>`;
             document.getElementById('r2').innerHTML = `R2: <span>${results.r2}</span>`;
             document.getElementById('r3').innerHTML = `R3: <span>${results.r3}</span>`;
@@ -980,14 +1266,14 @@
             // Update signature
             document.getElementById('signature-result').textContent = signature || "Kahfi";
             
-            // Update notes
-            const notesDisplay = document.getElementById('notes-display');
-            const notesText = document.getElementById('notes-text');
+            // Update berita terkini
+            const newsDisplay = document.getElementById('news-display');
+            const newsText = document.getElementById('news-text');
             if (notes && notes.trim() !== "") {
-                notesText.textContent = notes;
-                notesDisplay.style.display = 'block';
+                newsText.textContent = notes;
+                newsDisplay.style.display = 'block';
             } else {
-                notesDisplay.style.display = 'none';
+                newsDisplay.style.display = 'none';
             }
             
             // Update market indicator
@@ -1000,7 +1286,7 @@
             periodIndicator.textContent = periodConfigCurrent.name;
             periodIndicator.className = `period-indicator ${periodConfigCurrent.indicatorClass}`;
             
-            showNotification(`Perhitungan pivot point ${periodConfigCurrent.name.toLowerCase()} berhasil diperbarui!`, "success");
+            showNotification(`${periodConfigCurrent.name} pivot point calculation completed successfully!`, "success");
         }
         
         // Fungsi untuk reset form
@@ -1070,7 +1356,7 @@
                 document.getElementById('analysisDateEnd').value = formattedNextMonthEnd;
             }
             
-            showNotification("Form telah direset. Silakan masukkan data baru.", "success");
+            showNotification("Form has been reset. Please enter new data.", "success");
         }
         
         // Fungsi untuk mendownload hasil sebagai PDF
@@ -1081,28 +1367,38 @@
             const marketConfigCurrent = marketConfig[currentMarket];
             const periodConfigCurrent = periodConfig[currentPeriod];
             
-            // Judul
-            doc.setFontSize(18);
-            doc.setTextColor(212, 175, 55);
-            doc.text('REVIEW MARKET', 105, 20, null, null, 'center');
+            // Background color
+            doc.setFillColor(18, 30, 52);
+            doc.rect(0, 0, 210, 297, 'F');
+            
+            // Judul dengan gradient effect
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(22);
+            doc.setFont(undefined, 'bold');
+            doc.text('PIVOT POINT PRO ANALYSIS', 105, 25, null, null, 'center');
             
             doc.setFontSize(14);
-            doc.setTextColor(0, 0, 0);
-            doc.text(`${marketConfigCurrent.name} - ${periodConfigCurrent.name}`, 105, 28, null, null, 'center');
+            doc.text(`${marketConfigCurrent.name} - ${periodConfigCurrent.name}`, 105, 35, null, null, 'center');
             
             doc.setFontSize(10);
-            doc.text('PT RFB CIPUTRA SURABAYA', 105, 34, null, null, 'center');
+            doc.setTextColor(6, 214, 160);
+            doc.text('PT RFB CIPUTRA SURABAYA', 105, 42, null, null, 'center');
+            
+            // Garis dekoratif
+            doc.setDrawColor(255, 107, 0);
+            doc.setLineWidth(0.5);
+            doc.line(20, 48, 190, 48);
             
             // Periode analisis
-            const periodText = document.getElementById('result-date').textContent;
-            
+            doc.setTextColor(255, 209, 102);
             doc.setFontSize(11);
-            doc.text(`Periode Analisis: ${periodText}`, 20, 45);
+            doc.text(`Analysis Period: ${document.getElementById('result-date').textContent}`, 20, 60);
             
             // Data pasar
+            doc.setTextColor(255, 255, 255);
             doc.setFontSize(12);
             doc.setFont(undefined, 'bold');
-            doc.text('DATA PASAR', 20, 55);
+            doc.text('MARKET DATA', 20, 75);
             
             doc.setFont(undefined, 'normal');
             const marketData = [
@@ -1110,38 +1406,32 @@
                 `High: ${document.getElementById('result-high').textContent}`,
                 `Low: ${document.getElementById('result-low').textContent}`,
                 `Close: ${document.getElementById('result-close').textContent}`,
-                `Range Pergerakan Harga: ${document.getElementById('result-range').textContent}`
+                `Price Movement Range: ${document.getElementById('result-range').textContent}`
             ];
             
             marketData.forEach((item, index) => {
-                doc.text(item, 20, 65 + (index * 7));
+                doc.text(item, 20, 85 + (index * 7));
             });
             
             // Info profit
             const profitText = document.getElementById('point-value-text').textContent;
-            doc.text(profitText, 20, 100);
-            doc.text(`Probabilitas taking profit berdasarkan range pergerakan ${document.getElementById('result-range-value').textContent} poin:`, 20, 107);
-            doc.text(`USD: ${document.getElementById('profit-usd').textContent}`, 25, 114);
-            doc.text(`IDR: ${document.getElementById('profit-idr').textContent}`, 25, 121);
-            
-            // Catatan jika ada
-            const notesDisplay = document.getElementById('notes-display');
-            if (notesDisplay.style.display !== 'none') {
-                const notesText = document.getElementById('notes-text').textContent;
-                doc.text(`Catatan: ${notesText}`, 20, 130);
-            }
+            doc.text(profitText, 20, 120);
+            doc.text(`Taking Profit Probability based on movement range of ${document.getElementById('result-range-value').textContent} points:`, 20, 127);
+            doc.text(`USD: ${document.getElementById('profit-usd').textContent}`, 25, 134);
+            doc.text(`IDR: ${document.getElementById('profit-idr').textContent}`, 25, 141);
             
             // Analisis periode berikutnya
             const analysisDate = document.getElementById('analysis-date-result').textContent;
             
             doc.setFont(undefined, 'bold');
-            doc.text(`ANALISA ${periodConfigCurrent.analysisText}: ${analysisDate}`, 20, 145);
+            doc.setTextColor(255, 209, 102);
+            doc.text(`${periodConfigCurrent.analysisText}: ${analysisDate}`, 20, 155);
             
             // Resistance
             doc.setFontSize(11);
-            doc.setTextColor(198, 40, 40);
-            doc.text('RESISTANCE (Batas kenaikan harga)', 20, 155);
-            doc.setTextColor(0, 0, 0);
+            doc.setTextColor(255, 107, 107);
+            doc.text('RESISTANCE LEVELS', 20, 165);
+            doc.setTextColor(255, 255, 255);
             
             const resistanceLevels = [
                 `R1: ${document.querySelector('#r1 span').textContent}`,
@@ -1151,19 +1441,19 @@
             ];
             
             resistanceLevels.forEach((item, index) => {
-                doc.text(item, 20, 162 + (index * 7));
+                doc.text(item, 20, 172 + (index * 7));
             });
             
             // Pivot
             doc.setFont(undefined, 'bold');
-            doc.setTextColor(255, 143, 0);
-            doc.text(`HARGA PIVOT / Harga tengah = ${document.querySelector('#pivot span').textContent}`, 20, 192);
+            doc.setTextColor(255, 209, 102);
+            doc.text(`PIVOT POINT = ${document.querySelector('#pivot span').textContent}`, 20, 202);
             
             // Support
             doc.setFontSize(11);
-            doc.setTextColor(46, 125, 50);
-            doc.text('SUPPORT (Batas penurunan harga)', 20, 202);
-            doc.setTextColor(0, 0, 0);
+            doc.setTextColor(6, 214, 160);
+            doc.text('SUPPORT LEVELS', 20, 212);
+            doc.setTextColor(255, 255, 255);
             
             const supportLevels = [
                 `S1: ${document.querySelector('#s1 span').textContent}`,
@@ -1173,22 +1463,42 @@
             ];
             
             supportLevels.forEach((item, index) => {
-                doc.text(item, 20, 209 + (index * 7));
+                doc.text(item, 20, 219 + (index * 7));
             });
             
             // Tanda tangan
             const signature = document.getElementById('signature-result').textContent;
             doc.setFont(undefined, 'italic');
-            doc.text('Terima kasih,', 20, 250);
+            doc.setTextColor(166, 179, 204);
+            doc.text('Best regards,', 20, 250);
+            doc.setFont(undefined, 'bold');
+            doc.setTextColor(255, 255, 255);
             doc.text(signature, 20, 257);
+            doc.setFont(undefined, 'normal');
+            doc.setTextColor(6, 214, 160);
             doc.text('PT RFB CIPUTRA SURABAYA', 20, 264);
+            
+            // Berita terkini jika ada
+            const newsDisplay = document.getElementById('news-display');
+            if (newsDisplay.style.display !== 'none') {
+                const newsText = document.getElementById('news-text').textContent;
+                doc.setFont(undefined, 'bold');
+                doc.setTextColor(255, 209, 102);
+                doc.text('MARKET NEWS:', 20, 275);
+                doc.setFont(undefined, 'normal');
+                doc.setTextColor(166, 179, 204);
+                
+                // Split text into lines that fit within page width
+                const splitText = doc.splitTextToSize(newsText, 170);
+                doc.text(splitText, 20, 282);
+            }
             
             // Simpan PDF
             const date = new Date();
             const dateStr = date.toISOString().split('T')[0].replace(/-/g, '');
-            doc.save(`Analisis_${marketConfigCurrent.name}_${periodConfigCurrent.name}_${dateStr}.pdf`);
+            doc.save(`Pivot_Analysis_${marketConfigCurrent.name}_${periodConfigCurrent.name}_${dateStr}.pdf`);
             
-            showNotification("Hasil analisis berhasil diunduh sebagai PDF!", "success");
+            showNotification("Analysis exported successfully as PDF!", "success");
         }
         
         // Fungsi untuk mengubah jenis pasar
