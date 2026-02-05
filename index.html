@@ -509,14 +509,17 @@
             letter-spacing: 0.5px;
         }
         
+        /* PERBAIKAN: Warna yang lebih kontras untuk market news */
         .news-content {
             font-style: italic;
-            color: #a6b3cc;
+            color: #ffffff; /* Warna putih untuk kontras maksimal */
             line-height: 1.6;
-            background: rgba(10, 18, 33, 0.5);
+            background: rgba(255, 209, 102, 0.1); /* Background emas transparan */
             padding: 16px;
             border-radius: 8px;
             border-left: 4px solid #ffd166;
+            border: 1px solid rgba(255, 209, 102, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
         
         .period-indicator {
@@ -849,7 +852,7 @@
                 
                 <div class="form-group">
                     <label for="notes"><i class="fas fa-bullhorn"></i> MARKET NEWS (Optional)</label>
-                    <textarea id="notes" placeholder="Enter relevant market news or insights..."></textarea>
+                    <textarea id="notes" placeholder="Enter relevant market news or insights...">Federal Reserve signals potential rate cuts in Q2 2026, boosting gold prices. Hang Seng Index shows resilience amid regional economic recovery.</textarea>
                 </div>
                 
                 <div class="buttons">
@@ -952,11 +955,11 @@
                     <p style="color: #06d6a0; font-weight: 500;">PT RFB CIPUTRA SURABAYA</p>
                 </div>
                 
-                <div class="news-section" id="news-display" style="display: none;">
+                <div class="news-section" id="news-display" style="display: block;">
                     <div class="news-title">
                         <i class="fas fa-newspaper"></i> MARKET NEWS
                     </div>
-                    <div class="news-content" id="news-text"></div>
+                    <div class="news-content" id="news-text">Federal Reserve signals potential rate cuts in Q2 2026, boosting gold prices. Hang Seng Index shows resilience amid regional economic recovery.</div>
                 </div>
                 
                 <div class="buttons">
@@ -1470,27 +1473,32 @@
             const signature = document.getElementById('signature-result').textContent;
             doc.setFont(undefined, 'italic');
             doc.setTextColor(166, 179, 204);
-            doc.text('Best regards,', 20, 250);
+            doc.text('Best regards,', 20, 245);
             doc.setFont(undefined, 'bold');
             doc.setTextColor(255, 255, 255);
-            doc.text(signature, 20, 257);
+            doc.text(signature, 20, 252);
             doc.setFont(undefined, 'normal');
             doc.setTextColor(6, 214, 160);
-            doc.text('PT RFB CIPUTRA SURABAYA', 20, 264);
+            doc.text('PT RFB CIPUTRA SURABAYA', 20, 259);
             
-            // Berita terkini jika ada
+            // PERBAIKAN: Market News dengan warna kontras yang lebih baik
             const newsDisplay = document.getElementById('news-display');
             if (newsDisplay.style.display !== 'none') {
                 const newsText = document.getElementById('news-text').textContent;
                 doc.setFont(undefined, 'bold');
-                doc.setTextColor(255, 209, 102);
-                doc.text('MARKET NEWS:', 20, 275);
+                doc.setTextColor(255, 209, 102); // Warna emas untuk judul
+                doc.text('MARKET NEWS:', 20, 270);
                 doc.setFont(undefined, 'normal');
-                doc.setTextColor(166, 179, 204);
+                doc.setTextColor(255, 255, 255); // Warna putih untuk konten
                 
                 // Split text into lines that fit within page width
                 const splitText = doc.splitTextToSize(newsText, 170);
-                doc.text(splitText, 20, 282);
+                doc.text(splitText, 20, 277);
+                
+                // Tambahkan garis dekoratif di bawah market news
+                doc.setDrawColor(255, 209, 102);
+                doc.setLineWidth(0.3);
+                doc.line(20, 268, 190, 268);
             }
             
             // Simpan PDF
