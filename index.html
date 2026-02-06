@@ -509,17 +509,16 @@
             letter-spacing: 0.5px;
         }
         
-        /* PERBAIKAN: Warna yang lebih kontras untuk market news */
         .news-content {
             font-style: italic;
-            color: #ffffff; /* Warna putih untuk kontras maksimal */
+            color: #ffffff;
             line-height: 1.6;
-            background: rgba(255, 209, 102, 0.1); /* Background emas transparan */
+            background: rgba(255, 209, 102, 0.15);
             padding: 16px;
             border-radius: 8px;
             border-left: 4px solid #ffd166;
-            border: 1px solid rgba(255, 209, 102, 0.3);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 209, 102, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
         
         .period-indicator {
@@ -625,6 +624,12 @@
             border-left-color: #ff6b6b;
         }
         
+        .warning {
+            background: rgba(255, 209, 102, 0.1);
+            color: #ffd166;
+            border-left-color: #ffd166;
+        }
+        
         .market-indicator {
             display: inline-block;
             padding: 6px 14px;
@@ -710,7 +715,6 @@
             opacity: 1;
         }
         
-        /* Trading chart inspired elements */
         .chart-line {
             position: absolute;
             top: 0;
@@ -723,7 +727,6 @@
             clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 50%, 25% 40%, 50% 60%, 75% 30%, 100% 50%, 100% 100%, 0% 100%);
         }
         
-        /* Professional trading terminal style */
         .terminal-style {
             position: relative;
             overflow: hidden;
@@ -749,7 +752,6 @@
             z-index: 1;
         }
         
-        /* Grid pattern for professional look */
         .grid-bg {
             position: absolute;
             top: 0;
@@ -852,7 +854,7 @@
                 
                 <div class="form-group">
                     <label for="notes"><i class="fas fa-bullhorn"></i> MARKET NEWS (Optional)</label>
-                    <textarea id="notes" placeholder="Enter relevant market news or insights...">Federal Reserve signals potential rate cuts in Q2 2026, boosting gold prices. Hang Seng Index shows resilience amid regional economic recovery.</textarea>
+                    <textarea id="notes" placeholder="Enter relevant market news or insights...">Federal Reserve signals potential rate cuts in Q2 2026, boosting gold prices.</textarea>
                 </div>
                 
                 <div class="buttons">
@@ -925,7 +927,9 @@
                 </div>
                 
                 <div class="analysis-section">
-                    <h3 class="section-title"><i class="fas fa-chart-line"></i> TODAY'S ANALYSIS</h3>
+                    <div class="section-title" id="analysis-period-text">
+                        <i class="fas fa-chart-line"></i> TODAY'S ANALYSIS
+                    </div>
                     <p style="margin-bottom: 25px; font-style: italic; color: #8a9bb8;" id="analysis-date-result">Thursday, February 04, 2026</p>
                     
                     <div class="resistance">
@@ -955,11 +959,11 @@
                     <p style="color: #06d6a0; font-weight: 500;">PT RFB CIPUTRA SURABAYA</p>
                 </div>
                 
-                <div class="news-section" id="news-display" style="display: block;">
+                <div class="news-section" id="news-display" style="display: none;">
                     <div class="news-title">
                         <i class="fas fa-newspaper"></i> MARKET NEWS
                     </div>
-                    <div class="news-content" id="news-text">Federal Reserve signals potential rate cuts in Q2 2026, boosting gold prices. Hang Seng Index shows resilience amid regional economic recovery.</div>
+                    <div class="news-content" id="news-text"></div>
                 </div>
                 
                 <div class="buttons">
@@ -988,7 +992,14 @@
                 pointValueIDR: 1000000,
                 color: "#ffd166",
                 indicatorClass: "gold-indicator",
-                icon: "fas fa-gem"
+                icon: "fas fa-gem",
+                defaultPrices: {
+                    open: 4674.23,
+                    high: 4993.69,
+                    low: 4666.51,
+                    close: 4950.61
+                },
+                defaultNotes: "Federal Reserve signals potential rate cuts in Q2 2026, boosting gold prices."
             },
             hangseng: {
                 name: "HANG SENG INDEX",
@@ -996,7 +1007,14 @@
                 pointValueIDR: 50000,
                 color: "#06d6a0",
                 indicatorClass: "hangseng-indicator",
-                icon: "fas fa-chart-line"
+                icon: "fas fa-chart-line",
+                defaultPrices: {
+                    open: 16500.00,
+                    high: 16750.00,
+                    low: 16450.00,
+                    close: 16680.00
+                },
+                defaultNotes: "Hong Kong markets show volatility amid regional economic developments."
             }
         };
         
@@ -1031,13 +1049,15 @@
             }
         };
         
-        // Variabel global untuk konfigurasi pasar dan periode saat ini
+        // Variabel global
         let currentMarket = 'gold';
         let currentPeriod = 'daily';
         
+        // ========== FUNGSI UTAMA ==========
+        
         // Fungsi untuk menghitung pivot point
         function calculatePivotPoints(open, high, low, close) {
-            // Pivot Point (PP)
+            // Pivot Point (PP) - Standar perhitungan
             const pivot = (high + low + close) / 3;
             
             // Resistance Levels
@@ -1069,21 +1089,23 @@
             };
         }
         
-        // Fungsi untuk menghitung profit berdasarkan jenis pasar
+        // Fungsi untuk menghitung profit
         function calculateProfit(range, marketType) {
             const config = marketConfig[marketType];
-            const profitUSD = (range * config.pointValueUSD).toFixed(2);
-            const profitIDR = (range * config.pointValueIDR).toLocaleString('id-ID');
+            const profitUSD = (range * config.pointValueUSD);
+            const profitIDR = (range * config.pointValueIDR);
             
             return {
-                usd: `$${parseFloat(profitUSD).toLocaleString('en-US', {minimumFractionDigits: 2})}`,
-                idr: `Rp ${profitIDR}`,
+                usd: profitUSD,
+                idr: profitIDR,
+                formattedUSD: `$${profitUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`,
+                formattedIDR: `Rp ${profitIDR.toLocaleString('id-ID')}`,
                 pointText: `1 point value = $${config.pointValueUSD} / Rp ${config.pointValueIDR.toLocaleString('id-ID')}`
             };
         }
         
         // Fungsi untuk menampilkan notifikasi
-        function showNotification(message, type) {
+        function showNotification(message, type = "success") {
             const notification = document.getElementById('notification');
             notification.textContent = message;
             notification.className = `notification ${type}`;
@@ -1094,7 +1116,7 @@
             }, 5000);
         }
         
-        // Fungsi untuk mengubah tampilan input berdasarkan periode
+        // Fungsi untuk mengupdate input periode
         function updatePeriodInputs() {
             const periodConfigCurrent = periodConfig[currentPeriod];
             const periodInputs = document.getElementById('periodInputs');
@@ -1105,37 +1127,35 @@
                     <div class="form-group">
                         <label for="date"><i class="far fa-calendar"></i> ${periodConfigCurrent.label}</label>
                         <div class="date-range">
-                            <input type="date" id="date" value="2026-02-03">
+                            <input type="date" id="date" value="${getTodayDate()}">
                         </div>
                         <div class="period-info" id="periodInfo">${periodConfigCurrent.info}</div>
                     </div>
                 `;
                 
-                // Update label untuk analisis date
+                // Update label
                 document.querySelector('label[for="analysisDateStart"]').innerHTML = 
                     `<i class="fas fa-calendar-alt"></i> ${periodConfigCurrent.nextPeriodLabel}`;
                     
-                // Sembunyikan input tanggal akhir untuk harian
                 analysisDateEndGroup.style.display = 'none';
                 
-            } else if (currentPeriod === 'weekly' || currentPeriod === 'monthly') {
+            } else {
                 periodInputs.innerHTML = `
                     <div class="form-group">
                         <label for="dateStart"><i class="far fa-calendar"></i> ${periodConfigCurrent.label}</label>
                         <div class="date-range">
-                            <input type="date" id="dateStart" value="2026-02-03">
+                            <input type="date" id="dateStart" value="${getTodayDate()}">
                             <span class="date-separator">to</span>
-                            <input type="date" id="dateEnd" value="${currentPeriod === 'weekly' ? '2026-02-09' : '2026-02-28'}">
+                            <input type="date" id="dateEnd" value="${getFutureDate(currentPeriod === 'weekly' ? 6 : 27)}">
                         </div>
                         <div class="period-info" id="periodInfo">${periodConfigCurrent.info}</div>
                     </div>
                 `;
                 
-                // Update label untuk analisis date
+                // Update label
                 document.querySelector('label[for="analysisDateStart"]').innerHTML = 
                     `<i class="fas fa-calendar-alt"></i> ${periodConfigCurrent.nextPeriodLabel}`;
                     
-                // Tampilkan input tanggal akhir untuk mingguan/bulanan
                 analysisDateEndGroup.style.display = 'block';
                 
                 // Update label untuk tanggal akhir analisis
@@ -1144,21 +1164,21 @@
             }
         }
         
-        // Fungsi untuk mengupdate tampilan hasil
+        // Fungsi untuk mengupdate hasil
         function updateResults() {
-            // Ambil nilai input berdasarkan periode
-            let dateStartInput, dateEndInput;
+            // Ambil nilai input
+            let dateStart, dateEnd;
             
             if (currentPeriod === 'daily') {
-                dateStartInput = document.getElementById('date').value;
-                dateEndInput = dateStartInput; // Untuk harian, tanggal awal dan akhir sama
+                dateStart = document.getElementById('date').value;
+                dateEnd = dateStart;
             } else {
-                dateStartInput = document.getElementById('dateStart').value;
-                dateEndInput = document.getElementById('dateEnd').value;
+                dateStart = document.getElementById('dateStart').value;
+                dateEnd = document.getElementById('dateEnd').value;
             }
             
-            const analysisDateStartInput = document.getElementById('analysisDateStart').value;
-            const analysisDateEndInput = document.getElementById('analysisDateEnd').value;
+            const analysisDateStart = document.getElementById('analysisDateStart').value;
+            const analysisDateEnd = document.getElementById('analysisDateEnd').value;
             const open = parseFloat(document.getElementById('open').value);
             const high = parseFloat(document.getElementById('high').value);
             const low = parseFloat(document.getElementById('low').value);
@@ -1167,62 +1187,98 @@
             const notes = document.getElementById('notes').value;
             
             // Validasi input
-            if (isNaN(open) || isNaN(high) || isNaN(low) || isNaN(close)) {
-                showNotification("Please enter all price values correctly.", "error");
+            if (!validateInputs(open, high, low, close, dateStart, dateEnd, analysisDateStart, analysisDateEnd)) {
                 return;
-            }
-            
-            if (high < low) {
-                showNotification("High price must be greater than Low price.", "error");
-                return;
-            }
-            
-            if (open < 0 || high < 0 || low < 0 || close < 0) {
-                showNotification("Price values cannot be negative.", "error");
-                return;
-            }
-            
-            // Validasi tanggal untuk periode mingguan/bulanan
-            if (currentPeriod !== 'daily') {
-                const startDate = new Date(dateStartInput);
-                const endDate = new Date(dateEndInput);
-                
-                if (endDate < startDate) {
-                    showNotification("End date cannot be earlier than start date.", "error");
-                    return;
-                }
-                
-                // Validasi tanggal analisis berikutnya
-                const analysisStartDate = new Date(analysisDateStartInput);
-                const analysisEndDate = new Date(analysisDateEndInput);
-                
-                if (analysisEndDate < analysisStartDate) {
-                    showNotification("Analysis end date cannot be earlier than analysis start date.", "error");
-                    return;
-                }
             }
             
             // Hitung pivot points
             const results = calculatePivotPoints(open, high, low, close);
             
-            // Format tanggal berdasarkan periode
+            // Format tanggal
+            const formattedDates = formatDates(dateStart, dateEnd, analysisDateStart, analysisDateEnd);
+            
+            // Hitung profit
+            const profitResults = calculateProfit(parseFloat(results.range), currentMarket);
+            
+            // Update tampilan
+            updateDisplay(
+                results, 
+                profitResults, 
+                formattedDates, 
+                { open, high, low, close },
+                signature,
+                notes
+            );
+            
+            showNotification(`${marketConfig[currentMarket].name} - ${periodConfig[currentPeriod].name} calculation completed!`, "success");
+        }
+        
+        // Fungsi untuk validasi input
+        function validateInputs(open, high, low, close, dateStart, dateEnd, analysisDateStart, analysisDateEnd) {
+            // Validasi angka
+            if (isNaN(open) || isNaN(high) || isNaN(low) || isNaN(close)) {
+                showNotification("Please enter all price values correctly.", "error");
+                return false;
+            }
+            
+            if (high < low) {
+                showNotification("High price must be greater than Low price.", "error");
+                return false;
+            }
+            
+            if (open < 0 || high < 0 || low < 0 || close < 0) {
+                showNotification("Price values cannot be negative.", "error");
+                return false;
+            }
+            
+            // Validasi untuk Hang Seng
+            if (currentMarket === 'hangseng') {
+                if (high > 50000 || low < 10000) {
+                    showNotification("Hang Seng Index values should be between 10,000 and 50,000 points.", "warning");
+                }
+            }
+            
+            // Validasi tanggal untuk periode non-harian
+            if (currentPeriod !== 'daily') {
+                const startDate = new Date(dateStart);
+                const endDate = new Date(dateEnd);
+                
+                if (endDate < startDate) {
+                    showNotification("End date cannot be earlier than start date.", "error");
+                    return false;
+                }
+                
+                // Validasi tanggal analisis
+                const analysisStartDate = new Date(analysisDateStart);
+                const analysisEndDate = new Date(analysisDateEnd);
+                
+                if (analysisEndDate < analysisStartDate) {
+                    showNotification("Analysis end date cannot be earlier than analysis start date.", "error");
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        // Fungsi untuk format tanggal
+        function formatDates(dateStart, dateEnd, analysisDateStart, analysisDateEnd) {
             const periodConfigCurrent = periodConfig[currentPeriod];
             let formattedDate = '';
             let formattedAnalysisDate = '';
             
             if (currentPeriod === 'daily') {
-                const dateObj = new Date(dateStartInput);
-                const analysisDateObj = new Date(analysisDateStartInput);
+                const dateObj = new Date(dateStart);
+                const analysisDateObj = new Date(analysisDateStart);
                 
                 formattedDate = dateObj.toLocaleDateString('en-US', periodConfigCurrent.dateFormat);
                 formattedAnalysisDate = analysisDateObj.toLocaleDateString('en-US', periodConfigCurrent.dateFormat);
             } else {
-                const startDateObj = new Date(dateStartInput);
-                const endDateObj = new Date(dateEndInput);
-                const analysisStartDateObj = new Date(analysisDateStartInput);
-                const analysisEndDateObj = new Date(analysisDateEndInput);
+                const startDateObj = new Date(dateStart);
+                const endDateObj = new Date(dateEnd);
+                const analysisStartDateObj = new Date(analysisDateStart);
+                const analysisEndDateObj = new Date(analysisDateEnd);
                 
-                // Format rentang tanggal
                 if (currentPeriod === 'weekly') {
                     formattedDate = `${startDateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })} - ${endDateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
                     formattedAnalysisDate = `${analysisStartDateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })} - ${analysisEndDateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
@@ -1232,28 +1288,27 @@
                 }
             }
             
-            // Hitung profit berdasarkan jenis pasar
-            const profitResults = calculateProfit(parseFloat(results.range), currentMarket);
+            return { formattedDate, formattedAnalysisDate };
+        }
+        
+        // Fungsi untuk update display
+        function updateDisplay(results, profitResults, dates, prices, signature, notes) {
+            // Update tanggal
+            document.getElementById('result-date').textContent = dates.formattedDate;
+            document.getElementById('analysis-date-result').textContent = dates.formattedAnalysisDate;
             
-            // Update tampilan
-            document.getElementById('result-date').textContent = formattedDate;
-            document.getElementById('result-open').textContent = open.toFixed(2);
-            document.getElementById('result-high').textContent = high.toFixed(2);
-            document.getElementById('result-low').textContent = low.toFixed(2);
-            document.getElementById('result-close').textContent = close.toFixed(2);
+            // Update harga
+            document.getElementById('result-open').textContent = prices.open.toFixed(2);
+            document.getElementById('result-high').textContent = prices.high.toFixed(2);
+            document.getElementById('result-low').textContent = prices.low.toFixed(2);
+            document.getElementById('result-close').textContent = prices.close.toFixed(2);
             document.getElementById('result-range').textContent = `${results.range} points`;
             document.getElementById('result-range-value').textContent = results.range;
             
-            // Update profit info
+            // Update profit
             document.getElementById('point-value-text').textContent = profitResults.pointText;
-            document.getElementById('profit-usd').textContent = profitResults.usd;
-            document.getElementById('profit-idr').textContent = profitResults.idr;
-            
-            // Update tanggal analisis
-            document.getElementById('analysis-date-result').textContent = formattedAnalysisDate;
-            
-            // Update teks periode analisis
-            document.getElementById('analysis-period-text').textContent = periodConfigCurrent.analysisText;
+            document.getElementById('profit-usd').textContent = profitResults.formattedUSD;
+            document.getElementById('profit-idr').textContent = profitResults.formattedIDR;
             
             // Update pivot points
             document.getElementById('pivot').innerHTML = `<i class="fas fa-bullseye"></i> PIVOT POINT = <span>${results.pivot}</span>`;
@@ -1266,10 +1321,13 @@
             document.getElementById('s3').innerHTML = `S3: <span>${results.s3}</span>`;
             document.getElementById('s4').innerHTML = `S4: <span>${results.s4}</span>`;
             
+            // Update teks analisis periode
+            document.getElementById('analysis-period-text').innerHTML = `<i class="fas fa-chart-line"></i> ${periodConfig[currentPeriod].analysisText}`;
+            
             // Update signature
             document.getElementById('signature-result').textContent = signature || "Kahfi";
             
-            // Update berita terkini
+            // Update market news
             const newsDisplay = document.getElementById('news-display');
             const newsText = document.getElementById('news-text');
             if (notes && notes.trim() !== "") {
@@ -1279,90 +1337,102 @@
                 newsDisplay.style.display = 'none';
             }
             
-            // Update market indicator
-            const marketIndicator = document.getElementById('marketIndicator');
-            marketIndicator.textContent = marketConfig[currentMarket].name;
-            marketIndicator.className = `market-indicator ${marketConfig[currentMarket].indicatorClass}`;
+            // Update indicators
+            document.getElementById('marketIndicator').textContent = marketConfig[currentMarket].name;
+            document.getElementById('marketIndicator').className = `market-indicator ${marketConfig[currentMarket].indicatorClass}`;
             
-            // Update period indicator
-            const periodIndicator = document.getElementById('periodIndicator');
-            periodIndicator.textContent = periodConfigCurrent.name;
-            periodIndicator.className = `period-indicator ${periodConfigCurrent.indicatorClass}`;
-            
-            showNotification(`${periodConfigCurrent.name} pivot point calculation completed successfully!`, "success");
+            document.getElementById('periodIndicator').textContent = periodConfig[currentPeriod].name;
+            document.getElementById('periodIndicator').className = `period-indicator ${periodConfig[currentPeriod].indicatorClass}`;
         }
         
         // Fungsi untuk reset form
         function resetForm() {
-            document.getElementById('open').value = '';
-            document.getElementById('high').value = '';
-            document.getElementById('low').value = '';
-            document.getElementById('close').value = '';
+            const config = marketConfig[currentMarket];
+            
+            // Set harga default
+            document.getElementById('open').value = config.defaultPrices.open;
+            document.getElementById('high').value = config.defaultPrices.high;
+            document.getElementById('low').value = config.defaultPrices.low;
+            document.getElementById('close').value = config.defaultPrices.close;
+            
+            // Set signature
             document.getElementById('signature').value = 'Kahfi';
-            document.getElementById('notes').value = '';
             
-            // Set tanggal berdasarkan periode saat ini
-            const today = new Date();
+            // Set market news
+            document.getElementById('notes').value = config.defaultNotes;
             
-            if (currentPeriod === 'daily') {
-                const formattedDate = today.toISOString().split('T')[0];
-                document.getElementById('date').value = formattedDate;
-                
-                // Set tanggal besok untuk analisis
-                const tomorrow = new Date(today);
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                const formattedTomorrow = tomorrow.toISOString().split('T')[0];
-                document.getElementById('analysisDateStart').value = formattedTomorrow;
-            } else if (currentPeriod === 'weekly') {
-                // Set rentang tanggal minggu ini (Senin sampai Jumat)
-                const startOfWeek = new Date(today);
-                startOfWeek.setDate(today.getDate() - today.getDay() + (today.getDay() === 0 ? -6 : 1));
-                const formattedStartDate = startOfWeek.toISOString().split('T')[0];
-                
-                const endOfWeek = new Date(startOfWeek);
-                endOfWeek.setDate(startOfWeek.getDate() + 4); // 5 hari kerja
-                const formattedEndDate = endOfWeek.toISOString().split('T')[0];
-                
-                document.getElementById('dateStart').value = formattedStartDate;
-                document.getElementById('dateEnd').value = formattedEndDate;
-                
-                // Set rentang tanggal minggu depan
-                const nextWeekStart = new Date(startOfWeek);
-                nextWeekStart.setDate(startOfWeek.getDate() + 7);
-                const formattedNextWeekStart = nextWeekStart.toISOString().split('T')[0];
-                
-                const nextWeekEnd = new Date(endOfWeek);
-                nextWeekEnd.setDate(endOfWeek.getDate() + 7);
-                const formattedNextWeekEnd = nextWeekEnd.toISOString().split('T')[0];
-                
-                document.getElementById('analysisDateStart').value = formattedNextWeekStart;
-                document.getElementById('analysisDateEnd').value = formattedNextWeekEnd;
-            } else if (currentPeriod === 'monthly') {
-                // Set rentang tanggal bulan ini (tanggal 1 sampai akhir bulan)
-                const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-                const formattedStartDate = startOfMonth.toISOString().split('T')[0];
-                
-                const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-                const formattedEndDate = endOfMonth.toISOString().split('T')[0];
-                
-                document.getElementById('dateStart').value = formattedStartDate;
-                document.getElementById('dateEnd').value = formattedEndDate;
-                
-                // Set rentang tanggal bulan depan
-                const nextMonthStart = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-                const formattedNextMonthStart = nextMonthStart.toISOString().split('T')[0];
-                
-                const nextMonthEnd = new Date(today.getFullYear(), today.getMonth() + 2, 0);
-                const formattedNextMonthEnd = nextMonthEnd.toISOString().split('T')[0];
-                
-                document.getElementById('analysisDateStart').value = formattedNextMonthStart;
-                document.getElementById('analysisDateEnd').value = formattedNextMonthEnd;
-            }
+            // Update tanggal
+            updateDates();
             
-            showNotification("Form has been reset. Please enter new data.", "success");
+            // Sembunyikan market news
+            document.getElementById('news-display').style.display = 'none';
+            
+            showNotification(`Form reset for ${config.name}`, "success");
+            
+            // Update hasil
+            updateResults();
         }
         
-        // Fungsi untuk mendownload hasil sebagai PDF
+        // Fungsi untuk update tanggal
+        function updateDates() {
+            const today = getTodayDate();
+            
+            if (currentPeriod === 'daily') {
+                document.getElementById('date').value = today;
+                document.getElementById('analysisDateStart').value = getFutureDate(1);
+            } else {
+                document.getElementById('dateStart').value = today;
+                document.getElementById('dateEnd').value = getFutureDate(currentPeriod === 'weekly' ? 6 : 27);
+                document.getElementById('analysisDateStart').value = getFutureDate(currentPeriod === 'weekly' ? 7 : 28);
+                document.getElementById('analysisDateEnd').value = getFutureDate(currentPeriod === 'weekly' ? 13 : 55);
+            }
+        }
+        
+        // Fungsi helper untuk tanggal
+        function getTodayDate() {
+            const today = new Date();
+            return today.toISOString().split('T')[0];
+        }
+        
+        function getFutureDate(days) {
+            const date = new Date();
+            date.setDate(date.getDate() + days);
+            return date.toISOString().split('T')[0];
+        }
+        
+        // Fungsi untuk mengubah jenis pasar
+        function changeMarketType(marketType) {
+            currentMarket = marketType;
+            document.getElementById('marketType').value = marketType;
+            
+            // Update UI
+            document.getElementById('goldOption').classList.remove('active');
+            document.getElementById('hangsengOption').classList.remove('active');
+            document.getElementById(`${marketType}Option`).classList.add('active');
+            
+            // Reset form dengan nilai baru
+            resetForm();
+        }
+        
+        // Fungsi untuk mengubah periode
+        function changePeriodType(periodType) {
+            currentPeriod = periodType;
+            document.getElementById('periodType').value = periodType;
+            
+            // Update UI
+            document.getElementById('dailyOption').classList.remove('active');
+            document.getElementById('weeklyOption').classList.remove('active');
+            document.getElementById('monthlyOption').classList.remove('active');
+            document.getElementById(`${periodType}Option`).classList.add('active');
+            
+            // Update input fields
+            updatePeriodInputs();
+            
+            // Reset form
+            resetForm();
+        }
+        
+        // Fungsi untuk download PDF
         function downloadResults() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF('p', 'mm', 'a4');
@@ -1370,11 +1440,11 @@
             const marketConfigCurrent = marketConfig[currentMarket];
             const periodConfigCurrent = periodConfig[currentPeriod];
             
-            // Background color
+            // Background
             doc.setFillColor(18, 30, 52);
             doc.rect(0, 0, 210, 297, 'F');
             
-            // Judul dengan gradient effect
+            // Header
             doc.setTextColor(255, 255, 255);
             doc.setFontSize(22);
             doc.setFont(undefined, 'bold');
@@ -1387,17 +1457,17 @@
             doc.setTextColor(6, 214, 160);
             doc.text('PT RFB CIPUTRA SURABAYA', 105, 42, null, null, 'center');
             
-            // Garis dekoratif
+            // Separator
             doc.setDrawColor(255, 107, 0);
             doc.setLineWidth(0.5);
             doc.line(20, 48, 190, 48);
             
-            // Periode analisis
+            // Period
             doc.setTextColor(255, 209, 102);
             doc.setFontSize(11);
             doc.text(`Analysis Period: ${document.getElementById('result-date').textContent}`, 20, 60);
             
-            // Data pasar
+            // Market Data
             doc.setTextColor(255, 255, 255);
             doc.setFontSize(12);
             doc.setFont(undefined, 'bold');
@@ -1416,21 +1486,20 @@
                 doc.text(item, 20, 85 + (index * 7));
             });
             
-            // Info profit
+            // Profit Info
             const profitText = document.getElementById('point-value-text').textContent;
             doc.text(profitText, 20, 120);
             doc.text(`Taking Profit Probability based on movement range of ${document.getElementById('result-range-value').textContent} points:`, 20, 127);
             doc.text(`USD: ${document.getElementById('profit-usd').textContent}`, 25, 134);
             doc.text(`IDR: ${document.getElementById('profit-idr').textContent}`, 25, 141);
             
-            // Analisis periode berikutnya
+            // Analysis Date
             const analysisDate = document.getElementById('analysis-date-result').textContent;
-            
             doc.setFont(undefined, 'bold');
             doc.setTextColor(255, 209, 102);
             doc.text(`${periodConfigCurrent.analysisText}: ${analysisDate}`, 20, 155);
             
-            // Resistance
+            // Resistance Levels
             doc.setFontSize(11);
             doc.setTextColor(255, 107, 107);
             doc.text('RESISTANCE LEVELS', 20, 165);
@@ -1447,12 +1516,12 @@
                 doc.text(item, 20, 172 + (index * 7));
             });
             
-            // Pivot
+            // Pivot Point
             doc.setFont(undefined, 'bold');
             doc.setTextColor(255, 209, 102);
             doc.text(`PIVOT POINT = ${document.querySelector('#pivot span').textContent}`, 20, 202);
             
-            // Support
+            // Support Levels
             doc.setFontSize(11);
             doc.setTextColor(6, 214, 160);
             doc.text('SUPPORT LEVELS', 20, 212);
@@ -1469,7 +1538,7 @@
                 doc.text(item, 20, 219 + (index * 7));
             });
             
-            // Tanda tangan
+            // Signature
             const signature = document.getElementById('signature-result').textContent;
             doc.setFont(undefined, 'italic');
             doc.setTextColor(166, 179, 204);
@@ -1481,103 +1550,53 @@
             doc.setTextColor(6, 214, 160);
             doc.text('PT RFB CIPUTRA SURABAYA', 20, 259);
             
-            // PERBAIKAN: Market News dengan warna kontras yang lebih baik
+            // Market News (jika ada)
             const newsDisplay = document.getElementById('news-display');
             if (newsDisplay.style.display !== 'none') {
                 const newsText = document.getElementById('news-text').textContent;
                 doc.setFont(undefined, 'bold');
-                doc.setTextColor(255, 209, 102); // Warna emas untuk judul
+                doc.setTextColor(255, 209, 102);
                 doc.text('MARKET NEWS:', 20, 270);
                 doc.setFont(undefined, 'normal');
-                doc.setTextColor(255, 255, 255); // Warna putih untuk konten
+                doc.setTextColor(255, 255, 255);
                 
-                // Split text into lines that fit within page width
                 const splitText = doc.splitTextToSize(newsText, 170);
                 doc.text(splitText, 20, 277);
                 
-                // Tambahkan garis dekoratif di bawah market news
                 doc.setDrawColor(255, 209, 102);
                 doc.setLineWidth(0.3);
                 doc.line(20, 268, 190, 268);
             }
             
-            // Simpan PDF
+            // Save PDF
             const date = new Date();
             const dateStr = date.toISOString().split('T')[0].replace(/-/g, '');
-            doc.save(`Pivot_Analysis_${marketConfigCurrent.name}_${periodConfigCurrent.name}_${dateStr}.pdf`);
+            const marketName = marketConfigCurrent.name.replace(/\s+/g, '_');
+            const periodName = periodConfigCurrent.name;
+            doc.save(`Pivot_Analysis_${marketName}_${periodName}_${dateStr}.pdf`);
             
-            showNotification("Analysis exported successfully as PDF!", "success");
+            showNotification("Analysis exported as PDF!", "success");
         }
         
-        // Fungsi untuk mengubah jenis pasar
-        function changeMarketType(marketType) {
-            currentMarket = marketType;
-            document.getElementById('marketType').value = marketType;
-            
-            // Update tampilan opsi pasar
-            document.getElementById('goldOption').classList.remove('active');
-            document.getElementById('hangsengOption').classList.remove('active');
-            
-            if (marketType === 'gold') {
-                document.getElementById('goldOption').classList.add('active');
-            } else {
-                document.getElementById('hangsengOption').classList.add('active');
-            }
-            
-            // Update hasil jika sudah ada perhitungan
-            const open = parseFloat(document.getElementById('open').value);
-            if (!isNaN(open)) {
-                updateResults();
-            }
-        }
+        // ========== EVENT LISTENERS ==========
         
-        // Fungsi untuk mengubah periode analisis
-        function changePeriodType(periodType) {
-            currentPeriod = periodType;
-            document.getElementById('periodType').value = periodType;
-            
-            // Update tampilan opsi periode
-            document.getElementById('dailyOption').classList.remove('active');
-            document.getElementById('weeklyOption').classList.remove('active');
-            document.getElementById('monthlyOption').classList.remove('active');
-            
-            document.getElementById(`${periodType}Option`).classList.add('active');
-            
-            // Update input fields berdasarkan periode
-            updatePeriodInputs();
-            
-            // Reset tanggal berdasarkan periode baru
-            resetForm();
-            
-            // Update hasil jika sudah ada perhitungan
-            const open = parseFloat(document.getElementById('open').value);
-            if (!isNaN(open)) {
-                updateResults();
-            }
-        }
-        
-        // Event listeners
         document.getElementById('calculateBtn').addEventListener('click', updateResults);
         document.getElementById('resetBtn').addEventListener('click', resetForm);
         document.getElementById('downloadBtn').addEventListener('click', downloadResults);
         
-        // Event listener untuk pilihan pasar
+        // Market type selection
         document.getElementById('goldOption').addEventListener('click', () => changeMarketType('gold'));
         document.getElementById('hangsengOption').addEventListener('click', () => changeMarketType('hangseng'));
         
-        // Event listener untuk pilihan periode
+        // Period selection
         document.getElementById('dailyOption').addEventListener('click', () => changePeriodType('daily'));
         document.getElementById('weeklyOption').addEventListener('click', () => changePeriodType('weekly'));
         document.getElementById('monthlyOption').addEventListener('click', () => changePeriodType('monthly'));
         
-        // Hitung otomatis saat halaman dimuat
+        // Initialize on load
         window.addEventListener('DOMContentLoaded', () => {
-            // Set nilai default berdasarkan periode
             updatePeriodInputs();
             resetForm();
-            
-            // Hitung dengan nilai default
-            updateResults();
         });
     </script>
 </body>
