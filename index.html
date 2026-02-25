@@ -467,8 +467,7 @@
             color: #b0c0d4;
             background: rgba(255,255,255,0.02);
             border-left: 2px solid rgba(255,255,255,0.1);
-            padding: 8px 18px;
-            margin-left: 15px;
+            padding: 8px 18px 8px 32px;
             border-radius: 4px;
             letter-spacing: 0.3px;
         }
@@ -480,7 +479,7 @@
 
         .level-mid i {
             font-size: 0.8rem;
-            margin-right: 6px;
+            margin-right: 8px;
             opacity: 0.6;
         }
         
@@ -891,7 +890,7 @@
                 
                 <div class="form-group">
                     <label for="notes"><i class="fas fa-bullhorn"></i> MARKET NEWS (Optional)</label>
-                    <textarea id="notes" placeholder="Enter relevant market news or insights...">Federal Reserve signals potential rate cuts in Q2 2026, boosting gold prices.</textarea>
+                    <textarea id="notes" placeholder="Enter relevant market news or insights...">Federal Reserve signals potential rate cuts in Q2 2026, boosting gold prices. This could lead to increased volatility in the gold market with potential upside movement.</textarea>
                 </div>
                 
                 <div class="buttons">
@@ -1034,7 +1033,7 @@
                     low: 4666.51,
                     close: 4950.61
                 },
-                defaultNotes: "Federal Reserve signals potential rate cuts in Q2 2026, boosting gold prices."
+                defaultNotes: "Federal Reserve signals potential rate cuts in Q2 2026, boosting gold prices. This could lead to increased volatility in the gold market with potential upside movement."
             },
             hangseng: {
                 name: "HANG SENG INDEX",
@@ -1049,7 +1048,7 @@
                     low: 16450.00,
                     close: 16680.00
                 },
-                defaultNotes: "Hong Kong markets show volatility amid regional economic developments."
+                defaultNotes: "Hong Kong markets show volatility amid regional economic developments. Tech stocks lead the rally."
             }
         };
         
@@ -1087,6 +1086,7 @@
         // Variabel global
         let currentMarket = 'gold';
         let currentPeriod = 'daily';
+        let lastResults = null; // Menyimpan hasil perhitungan terakhir
         
         // ========== FUNGSI UTAMA ==========
         
@@ -1108,13 +1108,13 @@
             const s4 = s3 - (high - low);
             
             // Mid Points (rata-rata antara dua level berurutan)
-            const r1_r2_mid = (parseFloat(r1) + parseFloat(r2)) / 2;
-            const r2_r3_mid = (parseFloat(r2) + parseFloat(r3)) / 2;
-            const r3_r4_mid = (parseFloat(r3) + parseFloat(r4)) / 2;
+            const r1_r2_mid = (r1 + r2) / 2;
+            const r2_r3_mid = (r2 + r3) / 2;
+            const r3_r4_mid = (r3 + r4) / 2;
             
-            const s1_s2_mid = (parseFloat(s1) + parseFloat(s2)) / 2;
-            const s2_s3_mid = (parseFloat(s2) + parseFloat(s3)) / 2;
-            const s3_s4_mid = (parseFloat(s3) + parseFloat(s4)) / 2;
+            const s1_s2_mid = (s1 + s2) / 2;
+            const s2_s3_mid = (s2 + s3) / 2;
+            const s3_s4_mid = (s3 + s4) / 2;
             
             // Range pergerakan harga
             const range = high - low;
@@ -1243,6 +1243,7 @@
             
             // Hitung pivot points
             const results = calculatePivotPoints(open, high, low, close);
+            lastResults = results; // Simpan untuk keperluan PDF
             
             // Format tanggal
             const formattedDates = formatDates(dateStart, dateEnd, analysisDateStart, analysisDateEnd);
@@ -1504,177 +1505,235 @@
             resetForm();
         }
         
-        // Fungsi untuk download PDF (disederhanakan, mid points belum dimasukkan ke PDF)
+        // Fungsi untuk download PDF dengan layout 2 kolom
         function downloadResults() {
+            if (!lastResults) {
+                showNotification("Please calculate first before downloading.", "error");
+                return;
+            }
+            
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('p', 'mm', 'a4');
+            const doc = new jsPDF({
+                orientation: 'p',
+                unit: 'mm',
+                format: 'a4'
+            });
             
             const marketConfigCurrent = marketConfig[currentMarket];
             const periodConfigCurrent = periodConfig[currentPeriod];
             
-            // Background
+            // Background hitam
             doc.setFillColor(18, 30, 52);
             doc.rect(0, 0, 210, 297, 'F');
             
-            // Header
+            // ===== HEADER =====
             doc.setTextColor(255, 255, 255);
             doc.setFontSize(22);
-            doc.setFont(undefined, 'bold');
-            doc.text('PIVOT POINT PRO ANALYSIS', 105, 25, null, null, 'center');
+            doc.setFont('helvetica', 'bold');
+            doc.text('PIVOT POINT PRO ANALYSIS', 105, 20, { align: 'center' });
             
             doc.setFontSize(14);
-            doc.text(`${marketConfigCurrent.name} - ${periodConfigCurrent.name}`, 105, 35, null, null, 'center');
+            doc.setTextColor(255, 209, 102);
+            doc.text(`${marketConfigCurrent.name} - ${periodConfigCurrent.name}`, 105, 30, { align: 'center' });
             
             doc.setFontSize(10);
             doc.setTextColor(6, 214, 160);
-            doc.text('PT RFB CIPUTRA SURABAYA', 105, 42, null, null, 'center');
+            doc.text('PT RFB CIPUTRA SURABAYA', 105, 37, { align: 'center' });
             
-            // Separator
+            // Garis pemisah
             doc.setDrawColor(255, 107, 0);
             doc.setLineWidth(0.5);
-            doc.line(20, 48, 190, 48);
+            doc.line(20, 42, 190, 42);
             
-            // Period
-            doc.setTextColor(255, 209, 102);
-            doc.setFontSize(11);
-            doc.text(`Analysis Period: ${document.getElementById('result-date').textContent}`, 20, 60);
-            
-            // Market Data
+            // ===== PERIODE =====
             doc.setTextColor(255, 255, 255);
-            doc.setFontSize(12);
-            doc.setFont(undefined, 'bold');
-            doc.text('MARKET DATA', 20, 75);
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'bold');
+            doc.text('PERIODE:', 20, 52);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(255, 209, 102);
+            doc.text(document.getElementById('result-date').textContent, 60, 52);
             
-            doc.setFont(undefined, 'normal');
+            // ===== MARKET DATA =====
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(255, 255, 255);
+            doc.text('MARKET DATA', 20, 65);
+            
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
             const marketData = [
-                `Open: ${document.getElementById('result-open').textContent}`,
-                `High: ${document.getElementById('result-high').textContent}`,
-                `Low: ${document.getElementById('result-low').textContent}`,
-                `Close: ${document.getElementById('result-close').textContent}`,
-                `Price Movement Range: ${document.getElementById('result-range').textContent}`
+                { label: 'Open:', value: document.getElementById('result-open').textContent },
+                { label: 'High:', value: document.getElementById('result-high').textContent },
+                { label: 'Low:', value: document.getElementById('result-low').textContent },
+                { label: 'Close:', value: document.getElementById('result-close').textContent },
+                { label: 'Range:', value: document.getElementById('result-range').textContent }
             ];
             
-            marketData.forEach((item, index) => {
-                doc.text(item, 20, 85 + (index * 7));
+            let yPos = 72;
+            marketData.forEach(item => {
+                doc.setTextColor(166, 179, 204);
+                doc.text(item.label, 25, yPos);
+                doc.setTextColor(255, 255, 255);
+                doc.text(item.value, 60, yPos);
+                yPos += 6;
             });
             
-            // Profit Info
-            const profitText = document.getElementById('point-value-text').textContent;
-            doc.text(profitText, 20, 120);
-            doc.text(`Taking Profit Probability based on movement range of ${document.getElementById('result-range-value').textContent} points:`, 20, 127);
-            doc.text(`USD: ${document.getElementById('profit-usd').textContent}`, 25, 134);
-            doc.text(`IDR: ${document.getElementById('profit-idr').textContent}`, 25, 141);
-            
-            // Analysis Date
-            const analysisDate = document.getElementById('analysis-date-result').textContent;
-            doc.setFont(undefined, 'bold');
-            doc.setTextColor(255, 209, 102);
-            doc.text(`${periodConfigCurrent.analysisText}: ${analysisDate}`, 20, 155);
-            
-            // Resistance Levels (termasuk mid points)
-            doc.setFontSize(11);
-            doc.setTextColor(255, 107, 107);
-            doc.text('RESISTANCE LEVELS & MID POINTS', 20, 165);
-            doc.setTextColor(255, 255, 255);
-            
-            // Mengambil nilai dari DOM yang sudah diupdate
-            const r4 = document.querySelector('#r4 span')?.textContent || results?.r4 || '0';
-            const r3 = document.querySelector('#r3 span')?.textContent || results?.r3 || '0';
-            const r2 = document.querySelector('#r2 span')?.textContent || results?.r2 || '0';
-            const r1 = document.querySelector('#r1 span')?.textContent || results?.r1 || '0';
-            
-            // Mid points (menggunakan nilai dari DOM atau perhitungan ulang sederhana)
-            const midR3R4 = ((parseFloat(r4) + parseFloat(r3))/2).toFixed(2);
-            const midR2R3 = ((parseFloat(r3) + parseFloat(r2))/2).toFixed(2);
-            const midR1R2 = ((parseFloat(r2) + parseFloat(r1))/2).toFixed(2);
-            
-            const resistanceLines = [
-                `R4: ${r4}`,
-                `  Mid R3-R4: ${midR3R4}`,
-                `R3: ${r3}`,
-                `  Mid R2-R3: ${midR2R3}`,
-                `R2: ${r2}`,
-                `  Mid R1-R2: ${midR1R2}`,
-                `R1: ${r1}`
-            ];
-            
-            resistanceLines.forEach((item, index) => {
-                doc.text(item, 20, 172 + (index * 6));
-            });
-            
-            // Pivot Point
-            const pivotVal = document.querySelector('#pivot span')?.textContent || results?.pivot || '0';
-            doc.setFont(undefined, 'bold');
-            doc.setTextColor(255, 209, 102);
-            doc.text(`PIVOT POINT = ${pivotVal}`, 20, 172 + (resistanceLines.length * 6) + 8);
-            
-            // Support Levels (termasuk mid points)
-            const s1 = document.querySelector('#s1 span')?.textContent || results?.s1 || '0';
-            const s2 = document.querySelector('#s2 span')?.textContent || results?.s2 || '0';
-            const s3 = document.querySelector('#s3 span')?.textContent || results?.s3 || '0';
-            const s4 = document.querySelector('#s4 span')?.textContent || results?.s4 || '0';
-            
-            const midS1S2 = ((parseFloat(s1) + parseFloat(s2))/2).toFixed(2);
-            const midS2S3 = ((parseFloat(s2) + parseFloat(s3))/2).toFixed(2);
-            const midS3S4 = ((parseFloat(s3) + parseFloat(s4))/2).toFixed(2);
-            
-            doc.setFontSize(11);
+            // ===== PROFIT INFO =====
+            yPos += 5;
             doc.setTextColor(6, 214, 160);
-            doc.text('SUPPORT LEVELS & MID POINTS', 20, 172 + (resistanceLines.length * 6) + 16);
-            doc.setTextColor(255, 255, 255);
+            doc.setFont('helvetica', 'bold');
+            doc.text('PROFIT PROJECTION', 20, yPos);
+            yPos += 6;
             
-            const supportLines = [
-                `S1: ${s1}`,
-                `  Mid S1-S2: ${midS1S2}`,
-                `S2: ${s2}`,
-                `  Mid S2-S3: ${midS2S3}`,
-                `S3: ${s3}`,
-                `  Mid S3-S4: ${midS3S4}`,
-                `S4: ${s4}`
-            ];
-            
-            supportLines.forEach((item, index) => {
-                doc.text(item, 20, 172 + (resistanceLines.length * 6) + 24 + (index * 6));
-            });
-            
-            // Signature
-            const signature = document.getElementById('signature-result').textContent;
-            doc.setFont(undefined, 'italic');
+            doc.setFont('helvetica', 'normal');
             doc.setTextColor(166, 179, 204);
-            doc.text('Best regards,', 20, 245);
-            doc.setFont(undefined, 'bold');
-            doc.setTextColor(255, 255, 255);
-            doc.text(signature, 20, 252);
-            doc.setFont(undefined, 'normal');
-            doc.setTextColor(6, 214, 160);
-            doc.text('PT RFB CIPUTRA SURABAYA', 20, 259);
+            doc.text(document.getElementById('point-value-text').textContent, 25, yPos);
+            yPos += 6;
             
-            // Market News (jika ada)
+            doc.text('USD:', 25, yPos);
+            doc.setTextColor(255, 255, 255);
+            doc.text(document.getElementById('profit-usd').textContent, 55, yPos);
+            yPos += 6;
+            
+            doc.setTextColor(166, 179, 204);
+            doc.text('IDR:', 25, yPos);
+            doc.setTextColor(255, 255, 255);
+            doc.text(document.getElementById('profit-idr').textContent, 55, yPos);
+            
+            // ===== ANALYSIS DATE =====
+            yPos += 10;
+            doc.setTextColor(255, 209, 102);
+            doc.setFont('helvetica', 'bold');
+            doc.text(`${periodConfigCurrent.analysisText}:`, 20, yPos);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(255, 255, 255);
+            doc.text(document.getElementById('analysis-date-result').textContent, 20, yPos + 5);
+            
+            // ===== RESISTANCE & SUPPORT 2 KOLOM =====
+            yPos += 15;
+            
+            // Resistance (kiri)
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(255, 107, 107);
+            doc.text('RESISTANCE', 20, yPos);
+            
+            // Support (kanan)
+            doc.setTextColor(6, 214, 160);
+            doc.text('SUPPORT', 120, yPos);
+            
+            yPos += 6;
+            
+            // Data untuk resistance
+            const resistanceData = [
+                { level: 'R4', value: lastResults.r4, isMain: true },
+                { level: 'Mid R3-R4', value: lastResults.r3_r4_mid, isMain: false },
+                { level: 'R3', value: lastResults.r3, isMain: true },
+                { level: 'Mid R2-R3', value: lastResults.r2_r3_mid, isMain: false },
+                { level: 'R2', value: lastResults.r2, isMain: true },
+                { level: 'Mid R1-R2', value: lastResults.r1_r2_mid, isMain: false },
+                { level: 'R1', value: lastResults.r1, isMain: true }
+            ];
+            
+            // Data untuk support
+            const supportData = [
+                { level: 'S1', value: lastResults.s1, isMain: true },
+                { level: 'Mid S1-S2', value: lastResults.s1_s2_mid, isMain: false },
+                { level: 'S2', value: lastResults.s2, isMain: true },
+                { level: 'Mid S2-S3', value: lastResults.s2_s3_mid, isMain: false },
+                { level: 'S3', value: lastResults.s3, isMain: true },
+                { level: 'Mid S3-S4', value: lastResults.s3_s4_mid, isMain: false },
+                { level: 'S4', value: lastResults.s4, isMain: true }
+            ];
+            
+            // Tampilkan dalam 2 kolom
+            for (let i = 0; i < resistanceData.length; i++) {
+                // Resistance column (kiri)
+                if (resistanceData[i].isMain) {
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(255, 200, 200);
+                    doc.text(resistanceData[i].level, 25, yPos);
+                } else {
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(180, 190, 210);
+                    doc.text(`  ${resistanceData[i].level}`, 25, yPos);
+                }
+                doc.setTextColor(255, 255, 255);
+                doc.text(resistanceData[i].value, 70, yPos, { align: 'right' });
+                
+                // Support column (kanan)
+                if (supportData[i].isMain) {
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(160, 255, 220);
+                    doc.text(supportData[i].level, 125, yPos);
+                } else {
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(180, 190, 210);
+                    doc.text(`  ${supportData[i].level}`, 125, yPos);
+                }
+                doc.setTextColor(255, 255, 255);
+                doc.text(supportData[i].value, 180, yPos, { align: 'right' });
+                
+                yPos += 5;
+            }
+            
+            // ===== PIVOT POINT (di tengah) =====
+            yPos += 3;
+            doc.setFillColor(255, 143, 0, 0.2);
+            doc.rect(60, yPos-3, 90, 8, 'F');
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(255, 209, 102);
+            doc.text('PIVOT POINT', 70, yPos);
+            doc.text(lastResults.pivot, 140, yPos, { align: 'right' });
+            
+            // ===== SIGNATURE =====
+            yPos += 15;
+            doc.setFont('helvetica', 'italic');
+            doc.setTextColor(166, 179, 204);
+            doc.text('Best regards,', 20, yPos);
+            yPos += 5;
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(255, 255, 255);
+            doc.text(document.getElementById('signature-result').textContent, 20, yPos);
+            yPos += 5;
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(6, 214, 160);
+            doc.text('PT RFB CIPUTRA SURABAYA', 20, yPos);
+            
+            // ===== MARKET NEWS (paling bawah) =====
             const newsDisplay = document.getElementById('news-display');
             if (newsDisplay.style.display !== 'none') {
                 const newsText = document.getElementById('news-text').textContent;
-                doc.setFont(undefined, 'bold');
-                doc.setTextColor(255, 209, 102);
-                doc.text('MARKET NEWS:', 20, 270);
-                doc.setFont(undefined, 'normal');
-                doc.setTextColor(255, 255, 255);
                 
-                const splitText = doc.splitTextToSize(newsText, 170);
-                doc.text(splitText, 20, 277);
+                // Pindah ke posisi bawah halaman
+                yPos = 245;
                 
                 doc.setDrawColor(255, 209, 102);
                 doc.setLineWidth(0.3);
-                doc.line(20, 268, 190, 268);
+                doc.line(20, yPos-5, 190, yPos-5);
+                
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(255, 209, 102);
+                doc.text('MARKET NEWS', 20, yPos);
+                yPos += 5;
+                
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(255, 255, 255);
+                const splitNews = doc.splitTextToSize(newsText, 170);
+                doc.text(splitNews, 20, yPos);
             }
             
-            // Save PDF
-            const date = new Date();
-            const dateStr = date.toISOString().split('T')[0].replace(/-/g, '');
-            const marketName = marketConfigCurrent.name.replace(/\s+/g, '_');
-            const periodName = periodConfigCurrent.name;
-            doc.save(`Pivot_Analysis_${marketName}_${periodName}_${dateStr}.pdf`);
+            // ===== FOOTER =====
+            const today = new Date();
+            const dateStr = today.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            doc.setFontSize(8);
+            doc.setTextColor(107, 123, 156);
+            doc.text(`Generated on: ${dateStr}`, 105, 285, { align: 'center' });
             
-            showNotification("Analysis exported as PDF!", "success");
+            // Save PDF
+            const fileName = `Pivot_Analysis_${marketConfigCurrent.name.replace(/\s+/g, '_')}_${periodConfigCurrent.name}_${today.toISOString().split('T')[0]}.pdf`;
+            doc.save(fileName);
+            
+            showNotification("Analysis exported as PDF with side-by-side layout!", "success");
         }
         
         // ========== EVENT LISTENERS ==========
