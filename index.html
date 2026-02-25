@@ -417,47 +417,84 @@
         }
         
         .resistance, .support {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+        }
+
+        /* Level Styling */
+        .level-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
         }
         
         .level {
             display: flex;
             justify-content: space-between;
-            padding: 14px 18px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
+            padding: 12px 18px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s;
             border: 1px solid transparent;
+        }
+
+        .level-main {
+            font-weight: 600;
+            background: rgba(255,255,255,0.03);
+            border-left-width: 4px;
+            border-left-style: solid;
         }
         
         .level:hover {
             transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            background: rgba(255,255,255,0.05);
         }
         
-        .resistance .level {
-            background: linear-gradient(90deg, rgba(198, 40, 40, 0.1) 0%, rgba(198, 40, 40, 0.05) 100%);
-            color: #ff6b6b;
-            border-left: 4px solid #ff6b6b;
+        .resistance .level-main {
+            background: linear-gradient(90deg, rgba(198, 40, 40, 0.12) 0%, rgba(198, 40, 40, 0.05) 100%);
+            color: #ffb3b3;
+            border-left-color: #ff6b6b;
         }
         
-        .support .level {
-            background: linear-gradient(90deg, rgba(46, 125, 50, 0.1) 0%, rgba(46, 125, 50, 0.05) 100%);
-            color: #06d6a0;
-            border-left: 4px solid #06d6a0;
+        .support .level-main {
+            background: linear-gradient(90deg, rgba(46, 125, 50, 0.12) 0%, rgba(46, 125, 50, 0.05) 100%);
+            color: #a3e6cf;
+            border-left-color: #06d6a0;
+        }
+
+        .level-mid {
+            font-size: 0.9rem;
+            color: #b0c0d4;
+            background: rgba(255,255,255,0.02);
+            border-left: 2px solid rgba(255,255,255,0.1);
+            padding: 8px 18px;
+            margin-left: 15px;
+            border-radius: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .level-mid span {
+            color: #cbd5e6;
+            font-weight: 400;
+        }
+
+        .level-mid i {
+            font-size: 0.8rem;
+            margin-right: 6px;
+            opacity: 0.6;
         }
         
         .pivot-level {
-            background: linear-gradient(90deg, rgba(255, 143, 0, 0.15) 0%, rgba(255, 143, 0, 0.1) 100%) !important;
-            color: #ffd166 !important;
+            background: linear-gradient(90deg, rgba(255, 143, 0, 0.2) 0%, rgba(255, 143, 0, 0.1) 100%) !important;
+            color: #ffd966 !important;
             font-weight: bold;
             font-size: 1.2rem;
             margin: 20px 0;
             padding: 18px;
-            border-left: 4px solid #ffd166 !important;
+            border-left: 4px solid #ffb347 !important;
             text-align: center;
             letter-spacing: 0.5px;
+            border-radius: 8px;
         }
         
         .signature {
@@ -933,11 +970,10 @@
                     <p style="margin-bottom: 25px; font-style: italic; color: #8a9bb8;" id="analysis-date-result">Thursday, February 04, 2026</p>
                     
                     <div class="resistance">
-                        <h4 style="color: #ff6b6b; margin-bottom: 15px;"><i class="fas fa-arrow-up"></i> RESISTANCE LEVELS</h4>
-                        <div class="level" id="r1">R1: <span>5074.03</span></div>
-                        <div class="level" id="r2">R2: <span>5197.45</span></div>
-                        <div class="level" id="r3">R3: <span>5524.63</span></div>
-                        <div class="level" id="r4">R4: <span>5851.81</span></div>
+                        <h4 style="color: #ffb3b3; margin-bottom: 15px;"><i class="fas fa-arrow-up"></i> RESISTANCE LEVELS & MID POINTS</h4>
+                        <div class="level-list" id="resistance-levels">
+                            <!-- Akan diisi oleh JavaScript -->
+                        </div>
                     </div>
                     
                     <div class="pivot-level level" id="pivot">
@@ -945,11 +981,10 @@
                     </div>
                     
                     <div class="support">
-                        <h4 style="color: #06d6a0; margin-bottom: 15px;"><i class="fas fa-arrow-down"></i> SUPPORT LEVELS</h4>
-                        <div class="level" id="s1">S1: <span>4746.85</span></div>
-                        <div class="level" id="s2">S2: <span>4543.09</span></div>
-                        <div class="level" id="s3">S3: <span>4215.91</span></div>
-                        <div class="level" id="s4">S4: <span>3888.73</span></div>
+                        <h4 style="color: #a3e6cf; margin-bottom: 15px;"><i class="fas fa-arrow-down"></i> SUPPORT LEVELS & MID POINTS</h4>
+                        <div class="level-list" id="support-levels">
+                            <!-- Akan diisi oleh JavaScript -->
+                        </div>
                     </div>
                 </div>
                 
@@ -1072,6 +1107,15 @@
             const s3 = low - 2 * (high - pivot);
             const s4 = s3 - (high - low);
             
+            // Mid Points (rata-rata antara dua level berurutan)
+            const r1_r2_mid = (parseFloat(r1) + parseFloat(r2)) / 2;
+            const r2_r3_mid = (parseFloat(r2) + parseFloat(r3)) / 2;
+            const r3_r4_mid = (parseFloat(r3) + parseFloat(r4)) / 2;
+            
+            const s1_s2_mid = (parseFloat(s1) + parseFloat(s2)) / 2;
+            const s2_s3_mid = (parseFloat(s2) + parseFloat(s3)) / 2;
+            const s3_s4_mid = (parseFloat(s3) + parseFloat(s4)) / 2;
+            
             // Range pergerakan harga
             const range = high - low;
             
@@ -1085,6 +1129,12 @@
                 s2: s2.toFixed(2),
                 s3: s3.toFixed(2),
                 s4: s4.toFixed(2),
+                r1_r2_mid: r1_r2_mid.toFixed(2),
+                r2_r3_mid: r2_r3_mid.toFixed(2),
+                r3_r4_mid: r3_r4_mid.toFixed(2),
+                s1_s2_mid: s1_s2_mid.toFixed(2),
+                s2_s3_mid: s2_s3_mid.toFixed(2),
+                s3_s4_mid: s3_s4_mid.toFixed(2),
                 range: range.toFixed(2)
             };
         }
@@ -1291,6 +1341,31 @@
             return { formattedDate, formattedAnalysisDate };
         }
         
+        // Fungsi untuk membangun HTML level dengan mid points
+        function buildLevelsHTML(results) {
+            const resistanceHTML = `
+                <div class="level level-main" id="r4">R4: <span>${results.r4}</span></div>
+                <div class="level level-mid"><i class="fas fa-minus"></i> Mid R3-R4: <span>${results.r3_r4_mid}</span></div>
+                <div class="level level-main" id="r3">R3: <span>${results.r3}</span></div>
+                <div class="level level-mid"><i class="fas fa-minus"></i> Mid R2-R3: <span>${results.r2_r3_mid}</span></div>
+                <div class="level level-main" id="r2">R2: <span>${results.r2}</span></div>
+                <div class="level level-mid"><i class="fas fa-minus"></i> Mid R1-R2: <span>${results.r1_r2_mid}</span></div>
+                <div class="level level-main" id="r1">R1: <span>${results.r1}</span></div>
+            `;
+            
+            const supportHTML = `
+                <div class="level level-main" id="s1">S1: <span>${results.s1}</span></div>
+                <div class="level level-mid"><i class="fas fa-minus"></i> Mid S1-S2: <span>${results.s1_s2_mid}</span></div>
+                <div class="level level-main" id="s2">S2: <span>${results.s2}</span></div>
+                <div class="level level-mid"><i class="fas fa-minus"></i> Mid S2-S3: <span>${results.s2_s3_mid}</span></div>
+                <div class="level level-main" id="s3">S3: <span>${results.s3}</span></div>
+                <div class="level level-mid"><i class="fas fa-minus"></i> Mid S3-S4: <span>${results.s3_s4_mid}</span></div>
+                <div class="level level-main" id="s4">S4: <span>${results.s4}</span></div>
+            `;
+            
+            return { resistanceHTML, supportHTML };
+        }
+        
         // Fungsi untuk update display
         function updateDisplay(results, profitResults, dates, prices, signature, notes) {
             // Update tanggal
@@ -1310,16 +1385,13 @@
             document.getElementById('profit-usd').textContent = profitResults.formattedUSD;
             document.getElementById('profit-idr').textContent = profitResults.formattedIDR;
             
-            // Update pivot points
+            // Update pivot point
             document.getElementById('pivot').innerHTML = `<i class="fas fa-bullseye"></i> PIVOT POINT = <span>${results.pivot}</span>`;
-            document.getElementById('r1').innerHTML = `R1: <span>${results.r1}</span>`;
-            document.getElementById('r2').innerHTML = `R2: <span>${results.r2}</span>`;
-            document.getElementById('r3').innerHTML = `R3: <span>${results.r3}</span>`;
-            document.getElementById('r4').innerHTML = `R4: <span>${results.r4}</span>`;
-            document.getElementById('s1').innerHTML = `S1: <span>${results.s1}</span>`;
-            document.getElementById('s2').innerHTML = `S2: <span>${results.s2}</span>`;
-            document.getElementById('s3').innerHTML = `S3: <span>${results.s3}</span>`;
-            document.getElementById('s4').innerHTML = `S4: <span>${results.s4}</span>`;
+            
+            // Build dan update level dengan mid points
+            const { resistanceHTML, supportHTML } = buildLevelsHTML(results);
+            document.getElementById('resistance-levels').innerHTML = resistanceHTML;
+            document.getElementById('support-levels').innerHTML = supportHTML;
             
             // Update teks analisis periode
             document.getElementById('analysis-period-text').innerHTML = `<i class="fas fa-chart-line"></i> ${periodConfig[currentPeriod].analysisText}`;
@@ -1432,7 +1504,7 @@
             resetForm();
         }
         
-        // Fungsi untuk download PDF
+        // Fungsi untuk download PDF (disederhanakan, mid points belum dimasukkan ke PDF)
         function downloadResults() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF('p', 'mm', 'a4');
@@ -1499,43 +1571,70 @@
             doc.setTextColor(255, 209, 102);
             doc.text(`${periodConfigCurrent.analysisText}: ${analysisDate}`, 20, 155);
             
-            // Resistance Levels
+            // Resistance Levels (termasuk mid points)
             doc.setFontSize(11);
             doc.setTextColor(255, 107, 107);
-            doc.text('RESISTANCE LEVELS', 20, 165);
+            doc.text('RESISTANCE LEVELS & MID POINTS', 20, 165);
             doc.setTextColor(255, 255, 255);
             
-            const resistanceLevels = [
-                `R1: ${document.querySelector('#r1 span').textContent}`,
-                `R2: ${document.querySelector('#r2 span').textContent}`,
-                `R3: ${document.querySelector('#r3 span').textContent}`,
-                `R4: ${document.querySelector('#r4 span').textContent}`
+            // Mengambil nilai dari DOM yang sudah diupdate
+            const r4 = document.querySelector('#r4 span')?.textContent || results?.r4 || '0';
+            const r3 = document.querySelector('#r3 span')?.textContent || results?.r3 || '0';
+            const r2 = document.querySelector('#r2 span')?.textContent || results?.r2 || '0';
+            const r1 = document.querySelector('#r1 span')?.textContent || results?.r1 || '0';
+            
+            // Mid points (menggunakan nilai dari DOM atau perhitungan ulang sederhana)
+            const midR3R4 = ((parseFloat(r4) + parseFloat(r3))/2).toFixed(2);
+            const midR2R3 = ((parseFloat(r3) + parseFloat(r2))/2).toFixed(2);
+            const midR1R2 = ((parseFloat(r2) + parseFloat(r1))/2).toFixed(2);
+            
+            const resistanceLines = [
+                `R4: ${r4}`,
+                `  Mid R3-R4: ${midR3R4}`,
+                `R3: ${r3}`,
+                `  Mid R2-R3: ${midR2R3}`,
+                `R2: ${r2}`,
+                `  Mid R1-R2: ${midR1R2}`,
+                `R1: ${r1}`
             ];
             
-            resistanceLevels.forEach((item, index) => {
-                doc.text(item, 20, 172 + (index * 7));
+            resistanceLines.forEach((item, index) => {
+                doc.text(item, 20, 172 + (index * 6));
             });
             
             // Pivot Point
+            const pivotVal = document.querySelector('#pivot span')?.textContent || results?.pivot || '0';
             doc.setFont(undefined, 'bold');
             doc.setTextColor(255, 209, 102);
-            doc.text(`PIVOT POINT = ${document.querySelector('#pivot span').textContent}`, 20, 202);
+            doc.text(`PIVOT POINT = ${pivotVal}`, 20, 172 + (resistanceLines.length * 6) + 8);
             
-            // Support Levels
+            // Support Levels (termasuk mid points)
+            const s1 = document.querySelector('#s1 span')?.textContent || results?.s1 || '0';
+            const s2 = document.querySelector('#s2 span')?.textContent || results?.s2 || '0';
+            const s3 = document.querySelector('#s3 span')?.textContent || results?.s3 || '0';
+            const s4 = document.querySelector('#s4 span')?.textContent || results?.s4 || '0';
+            
+            const midS1S2 = ((parseFloat(s1) + parseFloat(s2))/2).toFixed(2);
+            const midS2S3 = ((parseFloat(s2) + parseFloat(s3))/2).toFixed(2);
+            const midS3S4 = ((parseFloat(s3) + parseFloat(s4))/2).toFixed(2);
+            
             doc.setFontSize(11);
             doc.setTextColor(6, 214, 160);
-            doc.text('SUPPORT LEVELS', 20, 212);
+            doc.text('SUPPORT LEVELS & MID POINTS', 20, 172 + (resistanceLines.length * 6) + 16);
             doc.setTextColor(255, 255, 255);
             
-            const supportLevels = [
-                `S1: ${document.querySelector('#s1 span').textContent}`,
-                `S2: ${document.querySelector('#s2 span').textContent}`,
-                `S3: ${document.querySelector('#s3 span').textContent}`,
-                `S4: ${document.querySelector('#s4 span').textContent}`
+            const supportLines = [
+                `S1: ${s1}`,
+                `  Mid S1-S2: ${midS1S2}`,
+                `S2: ${s2}`,
+                `  Mid S2-S3: ${midS2S3}`,
+                `S3: ${s3}`,
+                `  Mid S3-S4: ${midS3S4}`,
+                `S4: ${s4}`
             ];
             
-            supportLevels.forEach((item, index) => {
-                doc.text(item, 20, 219 + (index * 7));
+            supportLines.forEach((item, index) => {
+                doc.text(item, 20, 172 + (resistanceLines.length * 6) + 24 + (index * 6));
             });
             
             // Signature
